@@ -92,8 +92,8 @@ class _AjoutState extends State<Ajout> {
   }
 
   // Report in a Dialog
-  void _report(msg) {
-    showDialog(
+  Future<void> _report(msg) async {
+    await showDialog<bool>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
@@ -154,7 +154,7 @@ class _AjoutState extends State<Ajout> {
           ],
         ),
       ),
-      body: Container(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
           Text("Quel est le problème ?"),

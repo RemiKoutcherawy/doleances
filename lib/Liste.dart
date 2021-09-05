@@ -79,18 +79,21 @@ class _Liste extends State<Liste> {
       children:[
         Container(padding: EdgeInsets.all(5), child: Text(tache.what),),
         Container(padding: EdgeInsets.all(5), child: Text(tache.where),),
-        Container(padding: EdgeInsets.all(5), child: Text(tache.comment),),
-        GestureDetector(
-            child: Container(padding: EdgeInsets.all(5), child: Text(tache.priority.toString()),),
-            onTap: () {
-              _setPriority(tache);
-            }
+        InkWell(
+          child: Container(padding: EdgeInsets.all(5), child: Text(tache.comment),),
+          onTap: () {_setPriority(tache);},
+        ),
+        InkWell(
+          child: Container(padding: EdgeInsets.all(5), child: Text(tache.priority.toString()),),
+          // onTap: () {_setPriority(tache);},
+          onLongPress:() {_setPriority(tache);},
         ),
       ]);
   }
 
   // Show a Dialog to select priority, then update priority in Firebase
   Future<void> _setPriority(Tache tache) async {
+    print( '_setPriority' );
     int priority = await showDialog(
         context: context,
         barrierDismissible: false, // user must tap button!
@@ -131,16 +134,15 @@ class _Liste extends State<Liste> {
         });
     tache.priority = priority;
 
-    setState(() {});
-
     // Update Firebase CollectionReference<Map<String, dynamic>>
     var doleances = FirebaseFirestore.instance.collection("doleances");
     doleances.doc(tache.uid).update({'priority': priority});
     if (priority == -2) {
       doleances.doc(tache.uid).delete();
       _taches.remove(tache);
-      setState(() {});
     }
+
+    setState(() {});
   }
 
   // Widget

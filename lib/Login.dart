@@ -19,7 +19,7 @@ class _LoginState extends State<Login> {
     _showConnected();
   }
 
-  void _showErrorDialog(BuildContext context, String title, Exception e) {
+  Future<void> _showErrorDialog(BuildContext context, String title, Exception e) async {
     showDialog<void>(
       context: context,
       builder: (context) {
@@ -47,8 +47,8 @@ class _LoginState extends State<Login> {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _mail.text, password: _password.text);
       User? user = FirebaseAuth.instance.currentUser;
-      if (Navigator.canPop(context)) {
-        Navigator.pop(context); // Close the drawer and return
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop(); // Close the drawer and return
       } else {
         _message = 'Connecté : ${user!.email}.';
         _connected = true;

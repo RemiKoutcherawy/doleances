@@ -137,8 +137,8 @@ class _ConfigurationState extends State<Configuration> {
   }
 
   // Report in a Dialog
-  void _report(msg) {
-    showDialog(
+  Future<void> _report(msg) async {
+    await showDialog<bool>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
