@@ -2,7 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// For testing Login directly
+void main() => runApp(App());
+class App extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Login(title: 'Test Login'),
+    );
+  }
+}
+
 class Login extends StatefulWidget {
+  Login({Key? key, this.title}) : super(key: key);
+  final String? title;
+
   @override
   _LoginState createState() => _LoginState();
 }
@@ -10,8 +24,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String _message = '';
   bool _connected = false;
-  final TextEditingController _mail = TextEditingController();
-  final TextEditingController _password = TextEditingController();
+  final TextEditingController _code = TextEditingController();
 
   @override
   void initState() {
@@ -19,14 +32,14 @@ class _LoginState extends State<Login> {
     _showConnected();
   }
 
-  Future<void> _showErrorDialog(BuildContext context, String title, Exception e) async {
+  Future<void> _showErrorDialog(BuildContext context, String title, Exception? e) async {
     showDialog<void>(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text(title),
           content: Text(
-            '${(e as dynamic).message}',
+            (e != null) ? '${(e as dynamic).message}' : 'Entrez le code...',
           ),
           actions: <Widget>[
             OutlinedButton(
@@ -44,8 +57,18 @@ class _LoginState extends State<Login> {
   // Check if user is connected
   Future _connect() async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _mail.text, password: _password.text);
+      // 3 registered profiles, 3 codes, not in clear, this is opensource !
+      // Hash would be overkill just to choose between profiles.
+      if (_code.text.contains('test')) {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: 'test@doléances.fr', password: _code.text);
+      } else if (_code.text.contains('s')) {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: 'client@doléances.fr', password: _code.text);
+      } else if (_code.text.contains('S')) {
+        await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: 'gestion@doléances.fr', password: _code.text);
+      }
       User? user = FirebaseAuth.instance.currentUser;
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop(); // Close the drawer and return
@@ -58,26 +81,6 @@ class _LoginState extends State<Login> {
       _message = 'Erreur $e';
     }
     setState(() {});
-  }
-
-  // Register a new user
-  Future _register() async {
-    String email = _mail.text;
-    String password = _password.text;
-    try {
-      var credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      await credential.user!.updateDisplayName(email);
-      setState(() {
-        _message = 'Enregistré';
-        // Navigator.pushNamed(context, '/liste');
-      });
-    } on FirebaseAuthException catch (e) {
-      _showErrorDialog(context, 'Échec de l’inscription', e);
-      setState(() {
-        _message = 'Erreur $e';
-      });
-    }
   }
 
   // Disconnect current user
@@ -95,15 +98,11 @@ class _LoginState extends State<Login> {
 
   // Checks and update message in Widget
   void _showConnected() async {
-    await Firebase.initializeApp();
     try {
+      await Firebase.initializeApp(); // For testing Login directly
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        _mail.value = _mail.value.copyWith(
-          text: user.email!,
-          selection: TextSelection.collapsed(offset: _mail.value.selection.baseOffset),
-        );
-        _message = 'Connecté : ${user.email}.';
+        _message = 'Connecté : ${user.email}';
         _connected = true;
       } else {
         _message = 'Non connecté.';
@@ -115,48 +114,24 @@ class _LoginState extends State<Login> {
     setState(() {});
   }
 
-  // Send an email verification
-  void _verifyEmail() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null && !user.emailVerified) {
-      await user.sendEmailVerification();
-      _message = 'Mail de vérification envoyé.';
-    }
-    if (user != null && user.emailVerified) {
-      await user.sendEmailVerification();
-      _message = 'Mail déjà vérifié';
-    }
-    setState(() {});
-  }
-
   // Widget
   @override
   Widget build(BuildContext context) {
-    print(_connected);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doléance Login'),
+        title: Text(widget.title?? 'Login'),
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
-            // padding: EdgeInsets.all(36),
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               TextFormField(
-                controller: _mail,
-                keyboardType: TextInputType.emailAddress,
-                decoration: InputDecoration(hintText: 'Mail'),
-                validator: (text) => text!.isEmpty ? 'Votre mail est nécessaire' : '',
-              ),
-              TextFormField(
-                controller: _password,
-                keyboardType: TextInputType.emailAddress,
-                obscureText: true,
-                decoration: InputDecoration(hintText: 'Mot de passe'),
-                validator: (text) => text!.isEmpty ? 'Le mot de passe est nécessaire' : '',
+                controller: _code,
+                keyboardType: TextInputType.visiblePassword,
+                decoration: InputDecoration(hintText: 'Code'),
               ),
               Divider(),
               Center(
@@ -177,26 +152,12 @@ class _LoginState extends State<Login> {
               ) : ElevatedButton(
                 child: Text('Connexion'),
                 onPressed: () {
-                  _connect();
+                  if (_code.text.isEmpty) {
+                    _showErrorDialog(context, 'Le code est nécessaire', null);
+                  } else {
+                    _connect();
+                  }
                 },
-              ),
-              Row(
-                // mainAxisAlignment : MainAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    child: Text('Enregistrement'),
-                    onPressed: () {
-                      _register();
-                    },
-                  ),
-                  ElevatedButton(
-                    child: Text('Vérification mail'),
-                    onPressed: () {
-                      _verifyEmail();
-                    },
-                  ),
-                ],
               ),
             ],
           ),
