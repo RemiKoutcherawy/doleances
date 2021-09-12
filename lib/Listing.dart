@@ -23,7 +23,6 @@ class _Listing extends State<Listing> {
   void initState() {
     Firebase.initializeApp().whenComplete(() {
       _fetchDoleances();
-      // FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessageReceived);
       setState(() {});
     });
     super.initState();
@@ -35,10 +34,9 @@ class _Listing extends State<Listing> {
     if (user == null) {
       Navigator.pushNamed(context, '/login');
     }
-    var doleances = FirebaseFirestore.instance.collection("doleances");
+    CollectionReference<Map<String, dynamic>> doleances = FirebaseFirestore.instance.collection("doleances");
     doleances.get().then((QuerySnapshot<Map<String, dynamic>> snapshot) {
       List<QueryDocumentSnapshot> list = snapshot.docs;
-      print ('_fetchDoleances : ${list.length}');
       for (final d in list) {
         String uid = d.id;
         String what = d.get('what');
@@ -119,7 +117,7 @@ class _Listing extends State<Listing> {
         _report(_message);
       } else if (_mail.contains('gestion')) {
         // Update Firebase CollectionReference<Map<String, dynamic>> doleances
-        CollectionReference doleances = FirebaseFirestore.instance.collection("doleances");
+        CollectionReference<Map<String, dynamic>> doleances = FirebaseFirestore.instance.collection("doleances");
         await doleances.doc(task.uid).update({'priority': priority}).catchError(_onError);
         if (priority == -2) {
           doleances.doc(task.uid).delete().catchError(_onError);

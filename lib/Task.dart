@@ -10,7 +10,6 @@ class Task {
   String imageUrl = '';
 
   Task.fromJson(Map<String, dynamic> json) {
-    print('Task.fromJson');
     this.uid = json['id'];
     this.what = json['what'];
     this.where = json['where'];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // See https://firebase.flutter.dev/docs/firestore/usage/
@@ -11,10 +12,13 @@ class Configuration extends StatefulWidget {
 
 class _ConfigurationState extends State<Configuration> {
   // Dropdown list and selected value
-  List<DropdownMenuItem<String>>? _whereList;
-  String? _whereValue;
   List<DropdownMenuItem<String>>? _whatList;
   String? _whatValue;
+  List<DropdownMenuItem<String>>? _whereList;
+  String? _whereValue;
+
+  // Report message
+  String _message = '';
 
   // Controllers for TextFormFields
   final _controllerWhere = TextEditingController();
@@ -22,97 +26,160 @@ class _ConfigurationState extends State<Configuration> {
 
   @override
   void initState() {
+    Firebase.initializeApp().whenComplete(() {
+      _fetchWhatAndWhere();
+      setState(() {});
+    });
     super.initState();
-    _updateConfiguration();
   }
 
-  // Fetch and sets values in DropDowns
-  Future _updateConfiguration() async {
+  // Fetch values for DropDowns
+  Future _fetchWhatAndWhere() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       Navigator.pushNamed(context, '/login');
     }
-    CollectionReference configuration = FirebaseFirestore.instance.collection("configuration");
-    var doc = await configuration.doc('0P7ZltbztNCsXLZIkDcV').get();
-    // doc contains what[] and where[]
+    CollectionReference<Map<String, dynamic>> configuration = FirebaseFirestore.instance.collection("configuration");
+    configuration.doc('0P7ZltbztNCsXLZIkDcV').get().then((DocumentSnapshot<Map<String, dynamic>> doc) {
+      // doc contains what[] and where[]
+      List<String> listWhat = doc.get('what').cast<String>();
+      _setDropdownValues(listWhat, 'what');
+      List<String> listWhere = doc.get('where').cast<String>();
+      _setDropdownValues(listWhere, 'where');
+      setState(() {});
+    }).catchError(_onError);
+  }
 
-    List<String> listWhat = doc.get('what').cast<String>();
-    List<DropdownMenuItem<String>> listWhatDropDown =
-        listWhat.map<DropdownMenuItem<String>>((String value) {
+  // Set values in dropdown, and the selected value with first in list
+  void _setDropdownValues(List<String> values, String col) {
+    List<DropdownMenuItem<String>> listDropDown =
+    values.map<DropdownMenuItem<String>>((String value) {
       return DropdownMenuItem<String>(
         value: value,
         child: Text(value),
       );
     }).toList();
-    _whatList = listWhatDropDown;
-    _whatValue = listWhat.first; // important
-
-    List<String> listWhere = doc.get('where').cast<String>();
-    List<DropdownMenuItem<String>> listWhereDropDown =
-        listWhere.map<DropdownMenuItem<String>>((String value) {
-      return DropdownMenuItem<String>(
-        value: value,
-        child: Text(value),
-      );
-    }).toList();
-    _whereList = listWhereDropDown;
-    _whereValue = listWhere.first; // important
-
-    setState(() {});
+    if (col == 'what') {
+      _whatList = listDropDown;
+      _whatValue = values.first; // important
+    } if (col == 'where') {
+      _whereList = listDropDown;
+      _whereValue = values.first; // important
+    }
   }
 
   // Add String val to Arrau col in Firebase
   Future _add(String col, String val) async {
-    CollectionReference configuration = FirebaseFirestore.instance.collection("configuration");
-    var doc = await configuration.doc('0P7ZltbztNCsXLZIkDcV').get();
-
     // col can be 'what' or 'where'
-    List<String> list = doc.get(col).cast<String>();
-    String msg = '';
-    TextEditingController? controller = _getController(col);
-    if (controller != null) {
-      if (controller.text == '') {
-        msg = 'Donnez un nom !';
-      } else if (list.contains(controller.text)) {
-        msg = 'La liste contient déjà ${controller.text}';
-      } else {
-        list.add(controller.text);
-        doc.reference.update({col: list});
-        msg = 'Ajout de ${controller.text}';
-      }
+    List<DropdownMenuItem<String>>? listDropDown = (col == 'what') ? _whatList : (col == 'where') ? _whereList : _whatList;
+    // Retrieve values from dropdown, guess there is a smarter way...
+    List<String> list = [];
+    listDropDown!.forEach((DropdownMenuItem<String> item){
+      list.add(item.value!);
+    });
+    // Retrieve text and add to list
+    TextEditingController controller = _getController(col);
+    if (controller.text == '') {
+      _message = 'Donnez un nom !';
+      _report(_message);
+      return;
+    } else if (list.contains(controller.text)) {
+      _message = 'La liste contient déjà ${controller.text}';
+      _report(_message);
+      return;
     } else {
-      msg = 'Pas de controller ?';
+      list.add(controller.text);
     }
-    // Repaint list in Dropdown and report
-    _updateConfiguration();
-    _report(msg);
+    // Update dropdown with local list
+    _setDropdownValues(list, col);
+    setState(() {});
+
+    // Firebase update
+    CollectionReference<Map<String, dynamic>> configuration =
+        FirebaseFirestore.instance.collection("configuration");
+    configuration
+        .doc('0P7ZltbztNCsXLZIkDcV')
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> doc) {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        _message = 'Erreur client non défini.';
+      } else if (user.email == null) {
+        _message = 'Erreur client sans mail.';
+      } else {
+        String _mail = user.email!;
+        if (_mail.contains('test') || _mail.contains('client')) {
+          _message = 'Ajouté en local seulement. Test et client n‘ont pas le droit de modifier la configuration.';
+          _report(_message);
+        } else if (_mail.contains('gestion')) {
+          doc.reference.update({col: list});
+          // Replace by remote values ?
+          // list = doc.get(col).cast<String>();
+          // _setDropdownValues(list, col);
+          _report(_message);
+        } else {
+          _message = 'Ajouté en local seulement, vous n‘avez pas le droit de modifier la configuration.';
+          _report(_message);
+        }
+      }
+    }).catchError(_onError);
   }
 
   // Remove String val from Arrau col in Firebase
   Future _remove(String col, String val) async {
-    CollectionReference configuration = FirebaseFirestore.instance.collection("configuration");
-    var doc = await configuration.doc('0P7ZltbztNCsXLZIkDcV').get();
-
-    String msg = '';
-    List<String> list = doc.get(col).cast<String>();
+    List<DropdownMenuItem<String>>? listDropDown = (col == 'what') ? _whatList : (col == 'where') ? _whereList : _whatList;
+    // Retrieve values from dropdown, guess there is a smarter way...
+    List<String> list = [];
+    listDropDown!.forEach((DropdownMenuItem<String> item){
+      list.add(item.value!);
+    });
     TextEditingController? controller = _getController(col);
-    if (controller != null) {
-      if (controller.text == '') {
-        msg = 'Donnez un nom !';
-      } else if (list.contains(controller.text)) {
-        list.remove(controller.text);
-        doc.reference.update({col: list});
-        // doleances.doc(tache.uid).update({'priority': priority});
-        msg = 'La liste contenait, et ne contient plus ${controller.text}';
-      } else {
-        msg = 'La liste ne contient pas ${controller.text}';
-      }
+    if (controller.text == '') {
+      _message = 'Donnez un nom !';
+      _report(_message);
+      return;
+    } else if (!list.contains(controller.text)) {
+      _message = 'La liste ne contient pas ${controller.text}';
+      _report(_message);
+      return;
     } else {
-      msg = 'Pas de controller ?';
+      list.remove(controller.text);
+      _message = 'La liste contenait, et ne contient plus ${controller.text}';
     }
-    // Repaint list in Dropdown and report
-    _updateConfiguration();
-    _report(msg);
+    // Update dropdown with local list
+    _setDropdownValues(list, col);
+    setState(() {});
+
+    // Firebase update
+    CollectionReference<Map<String, dynamic>> configuration =
+    FirebaseFirestore.instance.collection("configuration");
+    configuration
+        .doc('0P7ZltbztNCsXLZIkDcV')
+        .get()
+        .then((DocumentSnapshot<Map<String, dynamic>> doc) {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        _message = 'Erreur client non défini.';
+      } else if (user.email == null) {
+        _message = 'Erreur client sans mail.';
+      } else {
+        String _mail = user.email!; // bang operator (!) should not be required
+        if (_mail.contains('test') || _mail.contains('client')) {
+          _message = 'Retrait en local seulement. Test et client n‘ont pas le droit de modifier la configuration.';
+          _report(_message);
+        } else if (_mail.contains('gestion')) {
+          // Update Firebase
+          doc.reference.update({col: list});
+          // Replace by remote values ?
+          // list = doc.get(col).cast<String>(); // Read remote
+          // _setDropdownValues(list, col); // Update dropdown
+          _report(_message);
+        } else {
+          _message = 'Utilisateur inconnu : $_mail';
+          _report(_message);
+        }
+      }
+    }).catchError(_onError);
   }
 
   @override
@@ -123,17 +190,23 @@ class _ConfigurationState extends State<Configuration> {
   }
 
   // Gets controller for 'col' witch can be 'what' or 'where'
-  TextEditingController? _getController(String col) {
-    TextEditingController? controller;
+  TextEditingController _getController(String col) {
+    TextEditingController controller = _controllerWhat; // Default
     switch (col) {
-      case 'where':
-        controller = _controllerWhere;
-        break;
       case 'what':
         controller = _controllerWhat;
         break;
+      case 'where':
+        controller = _controllerWhere;
+        break;
     }
     return controller;
+  }
+
+  // Catch errors and report
+  _onError(e){
+    _message = 'Erreur ${(e as dynamic).message}';
+    _report(_message);
   }
 
   // Report in a Dialog

@@ -27,7 +27,6 @@ class _AddingState extends State<Adding> {
   void initState() {
     Firebase.initializeApp().whenComplete(() {
       _fetchChoices();
-      // FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessageReceived);
       setState(() {});
     });
     super.initState();
@@ -45,7 +44,7 @@ class _AddingState extends State<Adding> {
       Navigator.pushNamed(context, '/login');
     }
     FirebaseFirestore store = FirebaseFirestore.instance;
-    var configuration = store.collection("configuration");
+    CollectionReference<Map<String, dynamic>> configuration = store.collection("configuration");
     configuration.get().then((snapshot) {
       QueryDocumentSnapshot<Object?> doc = snapshot.docs[0]; // only the first doc
       List<String> listWhat = doc.get('what').cast<String>();
@@ -70,26 +69,24 @@ class _AddingState extends State<Adding> {
       _whereList = listWhereDropDown;
       _whereValue = listWhere.first; // important
       setState(() {});
-    })
-    .catchError(_onError);
+    }).catchError(_onError);
   }
 
   // Get values and add  to Firebase
   Future<void> _addTask() async {
-    String _mail = '';
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       _message = 'Erreur client non défini.';
     } else if (user.email == null) {
       _message = 'Erreur client sans mail.';
     } else {
-      _mail = user.email!;
+      String _mail = user.email!; // Should not need bang operator
       if (_mail.contains('test')) {
         // TODO add to Listing._tasks
         _message = 'Ajouté en local seulement. Test n‘a pas le droit de modifier la base.';
         _report(_message);
       } else if (_mail.contains('client') || _mail.contains('gestion')) {
-        CollectionReference doleances = FirebaseFirestore.instance.collection('doleances');
+        CollectionReference<Map<String, dynamic>> doleances = FirebaseFirestore.instance.collection('doleances');
         doleances.add(<String, dynamic>{
           'timestamp': DateTime.now().millisecondsSinceEpoch,
           'uid': user.uid,
@@ -109,7 +106,6 @@ class _AddingState extends State<Adding> {
 
   // Catch errors and report
   _onError(e){
-    print ('_onError Adding $e');
     _message = 'Erreur ${(e as dynamic).message}';
     _report(_message);
   }
