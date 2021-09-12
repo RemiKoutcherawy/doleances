@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:doleances/Login.dart';
-import 'package:doleances/Liste.dart';
-import 'package:doleances/Ajout.dart';
+import 'package:doleances/Listing.dart';
+import 'package:doleances/Adding.dart';
 import 'package:doleances/Config.dart';
 import 'package:doleances/APropos.dart';
 
@@ -16,13 +16,13 @@ class App extends StatelessWidget {
       title: 'Doléances',
       initialRoute: '/',
       routes: {
-        '/liste': (context) => Liste(),
-        '/ajout': (context) => Ajout(),
+        '/listing': (context) => Listing(),
+        '/adding': (context) => Adding(),
         '/login': (context) => Login(),
         '/configuration': (context) => Configuration(),
         '/apropos': (context) => APropos(),
       },
-      home: Ajout(), // Ajout(), Login(), Liste(), Configuration(),
+      home: Adding(), // Adding(), Login(), Listing(), Configuration(),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // See https://firebase.flutter.dev/docs/firestore/usage/
 
-// Configure choices presented in Ajout.dart
+// Configure choices presented in Adding.dart
 class Configuration extends StatefulWidget {
   @override
   _ConfigurationState createState() => _ConfigurationState();
@@ -63,7 +63,7 @@ class _ConfigurationState extends State<Configuration> {
 
   // Add String val to Arrau col in Firebase
   Future _add(String col, String val) async {
-    var configuration = FirebaseFirestore.instance.collection("configuration");
+    CollectionReference configuration = FirebaseFirestore.instance.collection("configuration");
     var doc = await configuration.doc('0P7ZltbztNCsXLZIkDcV').get();
 
     // col can be 'what' or 'where'

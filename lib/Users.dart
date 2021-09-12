@@ -84,7 +84,7 @@ class _UsersState extends State<Users> {
       setState(() {
         _message = 'Enregistré';
       });
-    } on FirebaseAuthException catch (e) {
+    } on FirebaseException catch (e) {
       _showErrorDialog(context, 'Échec de l’inscription', e);
       setState(() {
         _message = 'Erreur ${(e as dynamic).message}';
@@ -109,7 +109,7 @@ class _UsersState extends State<Users> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         _email.value = _email.value.copyWith(
-          text: user.email ?? 'User with no mail?',
+          text: user.email ?? 'Client sans mail?',
         );
         _message = 'Connecté ${user.email}';
       }
@@ -135,7 +135,7 @@ class _UsersState extends State<Users> {
           _message = 'Erreur ${(e as dynamic).message}';
         }
       } else {
-        _message = 'Mail déjà vérifié';
+        _message = 'Mail déjà vérifié.';
       }
       setState(() {});
     }
@@ -147,7 +147,7 @@ class _UsersState extends State<Users> {
     if (user != null) {
       try {
         await user.updatePassword(password);
-        _message = 'Mot de passe changé';
+        _message = 'Mot de passe changé.';
       } on FirebaseAuthException catch (e) {
         _showErrorDialog(context, 'Échec', e);
         _message = 'Erreur ${(e as dynamic).message}';

@@ -78,7 +78,7 @@ class _LoginState extends State<Login> {
       }
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(context, 'Échec de la connexion', e);
-      _message = 'Erreur $e';
+      _message = 'Erreur ${(e as dynamic).message}';
     }
     setState(() {});
   }
@@ -91,7 +91,7 @@ class _LoginState extends State<Login> {
       _connected = false;
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(context, 'Échec de la déconnexion', e);
-      _message = 'Erreur $e';
+      _message = 'Erreur ${(e as dynamic).message}';
     }
     setState(() {});
   }
@@ -109,7 +109,7 @@ class _LoginState extends State<Login> {
         _connected = false;
       }
     } on FirebaseAuthException catch (e) {
-      _message = 'Erreur $e';
+      _message = 'Erreur ${(e as dynamic).message}';
     }
     setState(() {});
   }

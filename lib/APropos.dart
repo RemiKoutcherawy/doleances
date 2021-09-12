@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class APropos extends StatelessWidget {
   static const String _message =
 '''
-Doléances est une application de suivi de travaux.
+Doléances est un suivi de travaux.
 Tout utilisateur peut ajouter une doléance, un signalement.
 La liste est accessible à tous.
 La priorité peut être fixeé dans la liste des travaux à faire.
-RGPD : seule l'adresse mail est collectée, avec pour seule finalité de minimiser le spam.
+RGPD : aucune information personnelle n'est collectée, le code a pour seule finalité de minimiser le spam.
 ''';
 
   // Widget

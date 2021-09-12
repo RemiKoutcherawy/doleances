@@ -1,28 +1,36 @@
+import 'package:doleances/Listing.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-// A Widget to add a Tache
-class Ajout extends StatefulWidget {
+// A Widget to add a Task
+class Adding extends StatefulWidget {
   @override
-  _AjoutState createState() => _AjoutState();
+  _AddingState createState() => _AddingState();
 }
 
-class _AjoutState extends State<Ajout> {
+class _AddingState extends State<Adding> {
+  // final FirebaseMessaging messaging = FirebaseMessaging.instance;
   // Dropdown list and selected value
   List<DropdownMenuItem<String>>? _whereList;
   String? _whereValue;
   List<DropdownMenuItem<String>>? _whatList;
   String? _whatValue;
+  // Report message
+  String _message = '';
 
   // Controller for Comment TextFormField
   TextEditingController _controllerComment = TextEditingController();
 
   @override
   void initState() {
+    Firebase.initializeApp().whenComplete(() {
+      _fetchChoices();
+      // FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessageReceived);
+      setState(() {});
+    });
     super.initState();
-    _loadPrefs();
   }
 
   void dispose() {
@@ -31,64 +39,79 @@ class _AjoutState extends State<Ajout> {
   }
 
   // Fetch and sets 'what' 'where'
-  Future _loadPrefs() async {
-    await Firebase.initializeApp();
+  Future<void> _fetchChoices() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       Navigator.pushNamed(context, '/login');
     }
     FirebaseFirestore store = FirebaseFirestore.instance;
-    CollectionReference<Map<String, dynamic>> configuration = store.collection("configuration");
+    var configuration = store.collection("configuration");
+    configuration.get().then((snapshot) {
+      QueryDocumentSnapshot<Object?> doc = snapshot.docs[0]; // only the first doc
+      List<String> listWhat = doc.get('what').cast<String>();
+      List<DropdownMenuItem<String>> listWhatDropDown =
+          listWhat.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList();
+      _whatList = listWhatDropDown;
+      _whatValue = listWhat.first; // important
 
-    // TODO Try Catch
-    QuerySnapshot snapshot = await configuration.get();
-    QueryDocumentSnapshot<Object?> doc = snapshot.docs[0]; // only the first
-    // configuration contains what[] and where[]
-
-    List<String> listWhat = doc.get('what').cast<String>();
-    List<DropdownMenuItem<String>> listWhatDropDown =
-        listWhat.map<DropdownMenuItem<String>>((String value) {
-      return DropdownMenuItem<String>(
-        value: value,
-        child: Text(value),
-      );
-    }).toList();
-    _whatList = listWhatDropDown;
-    _whatValue = listWhat.first; // important
-
-    List<String> listWhere = doc.get('where').cast<String>();
-    List<DropdownMenuItem<String>> listWhereDropDown =
-        listWhere.map<DropdownMenuItem<String>>((String value) {
-      return DropdownMenuItem<String>(
-        value: value,
-        child: Text(value),
-      );
-    }).toList();
-    _whereList = listWhereDropDown;
-    _whereValue = listWhere.first; // important
-
-    setState(() {});
+      List<String> listWhere = doc.get('where').cast<String>();
+      List<DropdownMenuItem<String>> listWhereDropDown =
+          listWhere.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList();
+      _whereList = listWhereDropDown;
+      _whereValue = listWhere.first; // important
+      setState(() {});
+    })
+    .catchError(_onError);
   }
 
   // Get values and add  to Firebase
-  Future _addTask() async {
-    String uid = 'null';
-    String displayName = 'null';
+  Future<void> _addTask() async {
+    String _mail = '';
     User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      uid = user.uid;
-      displayName = user.displayName ?? displayName;
+    if (user == null) {
+      _message = 'Erreur client non défini.';
+    } else if (user.email == null) {
+      _message = 'Erreur client sans mail.';
+    } else {
+      _mail = user.email!;
+      if (_mail.contains('test')) {
+        // TODO add to Listing._tasks
+        _message = 'Ajouté en local seulement. Test n‘a pas le droit de modifier la base.';
+        _report(_message);
+      } else if (_mail.contains('client') || _mail.contains('gestion')) {
+        CollectionReference doleances = FirebaseFirestore.instance.collection('doleances');
+        doleances.add(<String, dynamic>{
+          'timestamp': DateTime.now().millisecondsSinceEpoch,
+          'uid': user.uid,
+          'displayName': user.displayName,
+          'what': _whatValue,
+          'where': _whereValue,
+          'comment': _controllerComment.text,
+          'priority': 0,
+        }).then((value) {
+          _message = 'Doléance ajoutée';
+          _report(_message);
+          setState(() {});
+        }).catchError(_onError);
+      }
     }
-    await FirebaseFirestore.instance.collection('doleances').add(<String, dynamic>{
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'uid': uid,
-      'displayName': displayName,
-      'what': _whatValue,
-      'where': _whereValue,
-      'comment': _controllerComment.text,
-      'priority': 0,
-    });
-    _report('Doléance ajoutée');
+  }
+
+  // Catch errors and report
+  _onError(e){
+    print ('_onError Adding $e');
+    _message = 'Erreur ${(e as dynamic).message}';
+    _report(_message);
   }
 
   // Report in a Dialog
@@ -123,13 +146,13 @@ class _AjoutState extends State<Ajout> {
             ListTile(
               title: Text('Liste'),
               onTap: () {
-                Navigator.pushNamed(context, '/liste');
+                Navigator.pushNamed(context, '/listing');
               },
             ),
             ListTile(
               title: Text('Ajout'),
               onTap: () {
-                Navigator.pushNamed(context, '/ajout');
+                Navigator.pushNamed(context, '/adding');
               },
             ),
             ListTile(
@@ -195,10 +218,16 @@ class _AjoutState extends State<Ajout> {
                 child: Text('Ajouter'),
                 onPressed: () {
                   _addTask();
-                  Navigator.pushNamed(context, '/liste');
+                  //Navigator.pushNamed(context, '/listing');
                 },
               ),
             ],
+          ),
+          Text(
+            _message,
+            style: TextStyle(
+              fontSize: 20,
+            ),
           ),
         ]),
       ),

@@ -1,6 +1,6 @@
-// A doléance tâche, grievance or task in English
-class Tache {
-  Tache({this.uid = '0', this.what = '', this.where = '', this.comment = '', this.priority = 0});
+// Une doléance tâche, grievance or task in English
+class Task {
+  Task({this.uid = '0', this.what = '', this.where = '', this.comment = '', this.priority = 0});
 
   String uid = '';
   String what = '';
@@ -9,7 +9,8 @@ class Tache {
   int priority = 0;
   String imageUrl = '';
 
-  Tache.fromJson(Map<String, dynamic> json) {
+  Task.fromJson(Map<String, dynamic> json) {
+    print('Task.fromJson');
     this.uid = json['id'];
     this.what = json['what'];
     this.where = json['where'];
@@ -22,9 +23,9 @@ class Tache {
     return {
       'uid': uid,
       'what': what,
-      'where' :where,
-      'comment' :comment,
-      'priority':priority,
+      'where': where,
+      'comment': comment,
+      'priority': priority,
     };
   }
 }
