@@ -23,6 +23,8 @@ class _AddingState extends State<Adding> {
   // Controller for Comment TextFormField
   TextEditingController _controllerComment = TextEditingController();
 
+  static const TextStyle style = TextStyle(fontSize: 20,);
+
   @override
   void initState() {
     Firebase.initializeApp().whenComplete(() {
@@ -140,32 +142,32 @@ class _AddingState extends State<Adding> {
             ),
             Padding(padding: EdgeInsets.only(bottom: 20)),
             ListTile(
-              title: Text('Liste'),
+              title: Text('Liste', style: style,),
               onTap: () {
                 Navigator.pushNamed(context, '/listing');
               },
             ),
             ListTile(
-              title: Text('Ajout'),
+              title: Text('Ajout', style: style,),
               onTap: () {
                 Navigator.pushNamed(context, '/adding');
               },
             ),
             ListTile(
-              title: Text('Configuration'),
+              title: Text('Configuration', style: style,),
               onTap: () {
                 Navigator.pushNamed(context, '/configuration');
               },
             ),
             ListTile(
-              title: Text('Connexion / Déconnexion'),
+              title: Text('Connexion / Déconnexion', style: style,),
               onTap: () {
                 Navigator.pushNamed(context, '/login');
               },
             ),
             Divider(),
             ListTile(
-              title: Text('A propos'),
+              title: Text('A propos', style: style,),
               onTap: () {
                 Navigator.pushNamed(context, '/apropos');
               },

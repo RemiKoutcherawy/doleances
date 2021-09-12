@@ -9,6 +9,7 @@ Seule la gestionnaire peut enregistrer comme prioritaire, terminé, ou supprimer
 Dans la liste les doléances sont en blanc, en orange si prioritaire, en vert si traité. 
 RGPD : aucune information personnelle n'est collectée, le code a pour seule finalité de minimiser le spam.
 ''';
+  static const TextStyle style = TextStyle(fontSize: 20,);
 
   // Widget
   @override

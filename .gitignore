@@ -10,3 +10,5 @@ ios/
 node_modules/
 private/
 web/
+/macos
+
