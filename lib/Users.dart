@@ -26,6 +26,8 @@ class _UsersState extends State<Users> {
   String _message = '';
   final TextEditingController _email = TextEditingController();
   final TextEditingController _password = TextEditingController();
+  // Style
+  static const TextStyle style = TextStyle(fontSize: 20,);
 
   @override
   void initState() {
@@ -38,13 +40,11 @@ class _UsersState extends State<Users> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(title),
-          content: Text(
-            '${(e as dynamic).message}',
-          ),
+          title: Text(title,style:style,),
+          content: Text('${(e as dynamic).message}',style:style,),
           actions: <Widget>[
             OutlinedButton(
-              child: Text('OK'),
+              child: Text('OK',style:style),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -160,7 +160,7 @@ class _UsersState extends State<Users> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Users Login'),
+        title: Text('Users Login',style:style),
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
@@ -184,13 +184,13 @@ class _UsersState extends State<Users> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    child: Text('Connexion'),
+                    child: Text('Connexion',style:style),
                     onPressed: () {
                       _connect();
                     },
                   ),
                   ElevatedButton(
-                    child: Text('Déconnexion'),
+                    child: Text('Déconnexion',style:style),
                     onPressed: () {
                       _disconnect();
                     },
@@ -201,13 +201,13 @@ class _UsersState extends State<Users> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    child: Text('Enregistrement'),
+                    child: Text('Enregistrement',style:style),
                     onPressed: () {
                       _register();
                     },
                   ),
                   ElevatedButton(
-                    child: Text('Mail de vérification'),
+                    child: Text('Mail de vérification',style:style),
                     onPressed: () {
                       _verifyEmail();
                     },
@@ -218,7 +218,7 @@ class _UsersState extends State<Users> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   ElevatedButton(
-                    child: Text('Changement mot de passe'),
+                    child: Text('Changement mot de passe',style:style),
                     onPressed: () {
                       _passwordChange();
                     },
@@ -227,12 +227,7 @@ class _UsersState extends State<Users> {
               ),
               Divider(),
               Center(
-                child: Text(
-                  _message,
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
+                child: Text(_message,style:style,),
               )
             ],
           ),
