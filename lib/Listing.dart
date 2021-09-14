@@ -18,14 +18,17 @@ class _Listing extends State<Listing> {
   List<Task> _tasks = [];
   // Report message
   String _message = 'message';
+  int _priority = 0;
+  // Style
+  static const TextStyle style = TextStyle(fontSize: 20,);
 
   @override
   void initState() {
+    super.initState();
     Firebase.initializeApp().whenComplete(() {
       _fetchDoleances();
       setState(() {});
     });
-    super.initState();
   }
 
   // Fetch and fill tasks
@@ -56,10 +59,10 @@ class _Listing extends State<Listing> {
     var header = TableRow(
         decoration: BoxDecoration(color: Colors.blue[100],),
         children: <Widget>[
-          Container(padding: EdgeInsets.all(5), child: Text("Quoi"),),
-          Container(padding: EdgeInsets.all(5), child: Text("Où"),),
-          Container(padding: EdgeInsets.all(5), child: Text("Commentaire"),),
-          Container(padding: EdgeInsets.all(5), child: Text("Priorité"),),
+          Container(padding: EdgeInsets.all(5), child: Text("Quoi", style:style),),
+          Container(padding: EdgeInsets.all(5), child: Text("Où", style:style),),
+          Container(padding: EdgeInsets.all(5), child: Text("Commentaire", style:style),),
+          Container(padding: EdgeInsets.all(5), child: Text("Priorité",style:style),),
         ]);
     var rows = List<TableRow>.generate(
       _tasks.length,
@@ -83,23 +86,25 @@ class _Listing extends State<Listing> {
         color: color,
       ),
       children:[
-        Container(padding: EdgeInsets.all(5), child: Text(task.what),),
-        Container(padding: EdgeInsets.all(5), child: Text(task.where),),
+        Container(padding: EdgeInsets.all(5), child: Text(task.what,style:style),),
+        Container(padding: EdgeInsets.all(5), child: Text(task.where,style:style),),
         InkWell(
-          child: Container(padding: EdgeInsets.all(5), child: Text(task.comment),),
+          child: Container(padding: EdgeInsets.all(5), child: Text(task.comment,style:style),),
           onTap: () {_setPriority(task);},
         ),
-        Container(padding: EdgeInsets.all(5), child: Text(task.priority.toString()),),
+        Container(padding: EdgeInsets.all(5), child: Text(task.priority.toString(),style:style),),
       ]);
   }
 
   // Show a Dialog to select priority, then update priority in Firebase
   Future<void> _setPriority(Task task) async {
-    int priority = await _askForPriority();
-    task.priority = priority;
+    int priority = await _askForPriority(task);
+
+    if (priority == task.priority){return;}
+    task.priority = _priority; // Should not be necessary
 
     // Update local listing
-    if (priority == -2) {
+    if (_priority == -2) {
       _tasks.remove(task);
     }
 
@@ -118,8 +123,8 @@ class _Listing extends State<Listing> {
       } else if (_mail.contains('gestion')) {
         // Update Firebase CollectionReference<Map<String, dynamic>> doleances
         CollectionReference<Map<String, dynamic>> doleances = FirebaseFirestore.instance.collection("doleances");
-        await doleances.doc(task.uid).update({'priority': priority}).catchError(_onError);
-        if (priority == -2) {
+        await doleances.doc(task.uid).update({'priority': _priority}).catchError(_onError);
+        if (_priority == -2) {
           doleances.doc(task.uid).delete().catchError(_onError);
         }
       }
@@ -128,38 +133,48 @@ class _Listing extends State<Listing> {
   }
 
   // Ask for priority in a Dialog
-  Future<dynamic> _askForPriority() {
+  Future<dynamic> _askForPriority(Task task) {
     return showDialog(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      // barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: Text('Priorité'),
+          title: Text('Priorité de ${task.what}',style:style),
           children: <Widget>[
             Column(
               children: [
                 SimpleDialogOption(
-                  child: Text('Prioritaire'),
+                  child: Text('Prioritaire',style:style),
                   onPressed: () {
+                    _priority = 1;
                     Navigator.pop(context, 1);
                   },
                 ),
                 SimpleDialogOption(
-                  child: Text('Normal'),
+                  child: Text('Normal',style:style),
                   onPressed: () {
+                    _priority = 0;
                     Navigator.pop(context, 0);
                   },
                 ),
                 SimpleDialogOption(
-                  child: Text('Terminé'),
+                  child: Text('Terminé',style:style),
                   onPressed: () {
+                    _priority = -1;
                     Navigator.pop(context, -1);
                   },
                 ),
                 SimpleDialogOption(
-                  child: Text('Supprimer la tâche'),
+                  child: Text('Supprimer la tâche',style:style),
                   onPressed: () {
+                    _priority = -2;
                     Navigator.pop(context, -2);
+                  },
+                ),
+                SimpleDialogOption(
+                  child: Text('Annuler',style:style),
+                  onPressed: () {
+                    Navigator.pop(context, task.priority);
                   },
                 ),
               ],
@@ -181,7 +196,7 @@ class _Listing extends State<Listing> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text('$msg'),
+            content: Text('$msg',style:style),
           );
         });
   }
@@ -191,7 +206,7 @@ class _Listing extends State<Listing> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doléances'),
+        title: Text('Doléances',style:style),
       ),
       body: SingleChildScrollView(
         child: Table(
@@ -207,7 +222,7 @@ class _Listing extends State<Listing> {
         ),
       ),
       persistentFooterButtons: [
-        Center(child: Text(_message, style: TextStyle(fontSize: 20,),),),
+        Center(child: Text(_message,style:style,),),
       ],
     );
   }

@@ -30,7 +30,6 @@ class _ListScreenState extends State<ListScreen> {
   DataTableSource _data = MyData();
 
   Future<void> _setPriority(int index) async {
-    print( '_setPriority' );
     int priority = await showDialog(
         context: context,
         barrierDismissible: false, // user must tap button!

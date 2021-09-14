@@ -19,11 +19,10 @@ class _AddingState extends State<Adding> {
   String? _whatValue;
   // Report message
   String _message = '';
-
+  // Style
+  static const TextStyle style = TextStyle(fontSize: 20,);
   // Controller for Comment TextFormField
   TextEditingController _controllerComment = TextEditingController();
-
-  static const TextStyle style = TextStyle(fontSize: 20,);
 
   @override
   void initState() {
@@ -54,7 +53,7 @@ class _AddingState extends State<Adding> {
           listWhat.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(value, style:style),
         );
       }).toList();
       _whatList = listWhatDropDown;
@@ -65,7 +64,7 @@ class _AddingState extends State<Adding> {
           listWhere.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value),
+          child: Text(value, style:style),
         );
       }).toList();
       _whereList = listWhereDropDown;
@@ -118,7 +117,7 @@ class _AddingState extends State<Adding> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text('$msg'),
+            content: Text('$msg', style:style),
           );
         });
   }
@@ -128,7 +127,7 @@ class _AddingState extends State<Adding> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Doléances'),
+        title: const Text('Doléances', style:style),
       ),
       drawer: Drawer(
         child: Column(
@@ -142,32 +141,32 @@ class _AddingState extends State<Adding> {
             ),
             Padding(padding: EdgeInsets.only(bottom: 20)),
             ListTile(
-              title: Text('Liste', style: style,),
+              title: Text('Liste', style:style,),
               onTap: () {
                 Navigator.pushNamed(context, '/listing');
               },
             ),
             ListTile(
-              title: Text('Ajout', style: style,),
+              title: Text('Ajout', style:style,),
               onTap: () {
                 Navigator.pushNamed(context, '/adding');
               },
             ),
             ListTile(
-              title: Text('Configuration', style: style,),
+              title: Text('Configuration', style:style,),
               onTap: () {
                 Navigator.pushNamed(context, '/configuration');
               },
             ),
             ListTile(
-              title: Text('Connexion / Déconnexion', style: style,),
+              title: Text('Connexion / Déconnexion', style:style,),
               onTap: () {
                 Navigator.pushNamed(context, '/login');
               },
             ),
             Divider(),
             ListTile(
-              title: Text('A propos', style: style,),
+              title: Text('A propos', style:style,),
               onTap: () {
                 Navigator.pushNamed(context, '/apropos');
               },
@@ -178,7 +177,7 @@ class _AddingState extends State<Adding> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Text("Quel est le problème ?"),
+          Text("Quel est le problème ?", style:style),
           DropdownButton<String>(
             isExpanded: true,
             items: _whatList,
@@ -190,7 +189,7 @@ class _AddingState extends State<Adding> {
             },
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
-          Text('Où se situe le problème ?'),
+          Text('Où se situe le problème ?', style:style),
           DropdownButton<String>(
             isExpanded: true,
             itemHeight: 50,
@@ -203,7 +202,7 @@ class _AddingState extends State<Adding> {
             },
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
-          Text('Commentaire éventuel ?'),
+          Text('Commentaire éventuel ?', style:style),
           TextFormField(
             maxLines: 3,
             keyboardType: TextInputType.multiline,
@@ -213,7 +212,7 @@ class _AddingState extends State<Adding> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                child: Text('Ajouter'),
+                child: Text('Ajouter', style:style),
                 onPressed: () {
                   _addTask();
                   //Navigator.pushNamed(context, '/listing');
@@ -221,12 +220,7 @@ class _AddingState extends State<Adding> {
               ),
             ],
           ),
-          Text(
-            _message,
-            style: TextStyle(
-              fontSize: 20,
-            ),
-          ),
+          Text(_message, style:style,),
         ]),
       ),
     );

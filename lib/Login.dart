@@ -25,6 +25,8 @@ class _LoginState extends State<Login> {
   String _message = '';
   bool _connected = false;
   final TextEditingController _code = TextEditingController();
+  // Style
+  static const TextStyle style = TextStyle(fontSize: 20,);
 
   @override
   void initState() {
@@ -37,13 +39,13 @@ class _LoginState extends State<Login> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(title),
+          title: Text(title,style:style),
           content: Text(
-            (e != null) ? '${(e as dynamic).message}' : 'Entrez le code...',
+            (e != null) ? '${(e as dynamic).message}' : 'Entrez le code...',style:style,
           ),
           actions: <Widget>[
             OutlinedButton(
-              child: Text('OK'),
+              child: Text('OK',style:style),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -119,7 +121,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title?? 'Login'),
+        title: Text(widget.title?? 'Login',style:style),
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
@@ -131,26 +133,22 @@ class _LoginState extends State<Login> {
               TextFormField(
                 controller: _code,
                 keyboardType: TextInputType.visiblePassword,
-                decoration: InputDecoration(hintText: 'Code'),
+                decoration: InputDecoration(hintText: 'Code...',),
+                  style:style,
               ),
               Divider(),
               Center(
-                child: Text(
-                  _message,
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
+                child: Text(_message,style:style,),
               ),
               Divider(),
               _connected ?
               ElevatedButton(
-                child: Text('Déconnexion'),
+                child: Text('Déconnexion',style:style),
                 onPressed: () {
                   _signOut();
                 },
               ) : ElevatedButton(
-                child: Text('Connexion'),
+                child: Text('Connexion',style:style),
                 onPressed: () {
                   if (_code.text.isEmpty) {
                     _showErrorDialog(context, 'Le code est nécessaire', null);

@@ -16,9 +16,10 @@ class _ConfigurationState extends State<Configuration> {
   String? _whatValue;
   List<DropdownMenuItem<String>>? _whereList;
   String? _whereValue;
-
   // Report message
   String _message = '';
+  // Style
+  static const TextStyle style = TextStyle(fontSize: 20,);
 
   // Controllers for TextFormFields
   final _controllerWhere = TextEditingController();
@@ -56,7 +57,7 @@ class _ConfigurationState extends State<Configuration> {
     values.map<DropdownMenuItem<String>>((String value) {
       return DropdownMenuItem<String>(
         value: value,
-        child: Text(value),
+        child: Text(value,style:style),
       );
     }).toList();
     if (col == 'what') {
@@ -215,7 +216,7 @@ class _ConfigurationState extends State<Configuration> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text('$msg'),
+            content: Text('$msg',style:style),
           );
         });
   }
@@ -225,12 +226,12 @@ class _ConfigurationState extends State<Configuration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Doléances configuration'),
+        title: const Text('Doléances configuration',style:style),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Text('Endroits possibles'),
+          Text('Endroits possibles',style:style),
           DropdownButton<String>(
             isExpanded: true,
             items: _whereList,
@@ -242,7 +243,7 @@ class _ConfigurationState extends State<Configuration> {
               });
             },
           ),
-          Text('Ajout ou retrait d‘un endroit possible'),
+          Text('Ajout ou retrait d‘un endroit possible',style:style),
           TextFormField(
             keyboardType: TextInputType.text,
             controller: _controllerWhere,
@@ -251,14 +252,14 @@ class _ConfigurationState extends State<Configuration> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                child: const Text('Ajouter'),
+                child: const Text('Ajouter',style:style),
                 onPressed: () {
                   _add('where', _controllerWhere.text);
                 },
               ),
               Padding(padding: EdgeInsets.only(left: 20)),
               ElevatedButton(
-                child: const Text('Retirer'),
+                child: const Text('Retirer',style:style),
                 onPressed: () {
                   _remove('where', _controllerWhere.text);
                 },
@@ -266,7 +267,7 @@ class _ConfigurationState extends State<Configuration> {
             ],
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
-          Text('Problèmes possibles'),
+          Text('Problèmes possibles',style:style),
           DropdownButton<String>(
             isExpanded: true,
             items: _whatList,
@@ -278,7 +279,7 @@ class _ConfigurationState extends State<Configuration> {
               });
             },
           ),
-          Text("Ajout ou retrait d‘un problème possible"),
+          Text('Ajout ou retrait d‘un problème possible',style:style),
           TextFormField(
             keyboardType: TextInputType.text,
             controller: _controllerWhat,
@@ -288,14 +289,14 @@ class _ConfigurationState extends State<Configuration> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                child: const Text('Ajouter'),
+                child: const Text('Ajouter',style:style),
                 onPressed: () {
                   _add('what', _controllerWhat.text);
                 },
               ),
               Padding(padding: EdgeInsets.only(left: 20)),
               ElevatedButton(
-                child: const Text('Retirer'),
+                child: const Text('Retirer',style:style),
                 onPressed: () {
                   _remove('what', _controllerWhat.text);
                 },
