@@ -1,34 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:doleances/Doleances.dart';
 
 import 'package:doleances/Login.dart';
-import 'package:doleances/Listing.dart';
-import 'package:doleances/Adding.dart';
-import 'package:doleances/Config.dart';
+import 'package:doleances/Liste.dart';
+import 'package:doleances/Ajout.dart';
+import 'package:doleances/Configuration.dart';
 import 'package:doleances/APropos.dart';
 
-void main() => runApp(App());
+void main() => runApp(
+  ChangeNotifierProvider(
+    create: (_) => Doleances(),
+    child: App(),
+  ),);
 
 class App extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+    // Provider
+    Doleances doleances = context.watch<Doleances>();
+
     return MaterialApp(
-      title: 'Doléances',
-      theme: appTheme,
-      initialRoute: '/',
-      routes: {
-        '/listing': (context) => Listing(),
-        '/adding': (context) => Adding(),
-        '/login': (context) => Login(),
-        '/configuration': (context) => Configuration(),
-        '/apropos': (context) => APropos(),
-      },
-      home: Adding(),
-      // Adding(), Login(), Listing(), Configuration(),
-      debugShowCheckedModeBanner: false,
-    );
+          title: 'Doléances',
+          theme: appTheme,
+          initialRoute: '/',
+          routes: {
+            '/liste': (context) => Liste(),
+            '/ajout': (context) => Ajout(),
+            '/login': (context) => Login(),
+            '/configuration': (context) => Configuration(),
+            '/apropos': (context) => APropos(),
+          },
+          home: doleances.connected ? Ajout() : Login(),
+          // Ajout(), Login(), Liste(), Configuration(),
+          debugShowCheckedModeBanner: false,
+        );
   }
 }
 
+// Theme
 final appTheme = ThemeData(
   textTheme: const TextTheme(
     headline1: TextStyle(

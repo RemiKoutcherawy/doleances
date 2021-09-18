@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 void main() {
-  runApp(myApp());
+  runApp(App());
 }
 
-class myApp extends StatelessWidget {
+class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -68,7 +68,6 @@ class _ListScreenState extends State<ListScreen> {
             ],
           );
         });
-    print(priority);
 
     // Update Firebase CollectionReference<Map<String, dynamic>>
     // var doleances = FirebaseFirestore.instance.collection("doleances");
@@ -137,7 +136,7 @@ class MyData extends DataTableSource {
       case 1 : color = Colors.orangeAccent; break;
       case -1 : color = Colors.lightGreen; break;
       default : color = Colors.white; break;
-    };
+    }
     var all = MaterialStateProperty.all(color);
     return all;
   }
