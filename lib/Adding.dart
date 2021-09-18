@@ -19,8 +19,6 @@ class _AddingState extends State<Adding> {
   String? _whatValue;
   // Report message
   String _message = '';
-  // Style
-  static const TextStyle style = TextStyle(fontSize: 20,);
   // Controller for Comment TextFormField
   TextEditingController _controllerComment = TextEditingController();
 
@@ -53,7 +51,8 @@ class _AddingState extends State<Adding> {
           listWhat.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value, style:style),
+          child: Text(value,
+            style: Theme.of(context).textTheme.headline6,),
         );
       }).toList();
       _whatList = listWhatDropDown;
@@ -64,7 +63,8 @@ class _AddingState extends State<Adding> {
           listWhere.map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
-          child: Text(value, style:style),
+          child: Text(value,
+            style: Theme.of(context).textTheme.headline6,),
         );
       }).toList();
       _whereList = listWhereDropDown;
@@ -97,7 +97,8 @@ class _AddingState extends State<Adding> {
           'comment': _controllerComment.text,
           'priority': 0,
         }).then((value) {
-          _message = 'Doléance ajoutée';
+          _message = '''Ajoutée : $_whatValue / $_whereValue
+          ${_controllerComment.text}''';
           _report(_message);
           setState(() {});
         }).catchError(_onError);
@@ -117,7 +118,8 @@ class _AddingState extends State<Adding> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text('$msg', style:style),
+            content: Text('$msg',
+            style: Theme.of(context).textTheme.headline6,),
           );
         });
   }
@@ -127,7 +129,7 @@ class _AddingState extends State<Adding> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Doléances', style:style),
+        title: Text('Doléances', style: Theme.of(context).textTheme.headline5,),
       ),
       drawer: Drawer(
         child: Column(
@@ -141,32 +143,32 @@ class _AddingState extends State<Adding> {
             ),
             Padding(padding: EdgeInsets.only(bottom: 20)),
             ListTile(
-              title: Text('Liste', style:style,),
+              title: Text('Liste',style: Theme.of(context).textTheme.headline5,),
               onTap: () {
                 Navigator.pushNamed(context, '/listing');
               },
             ),
             ListTile(
-              title: Text('Ajout', style:style,),
+              title: Text('Ajout',style: Theme.of(context).textTheme.headline5,),
               onTap: () {
                 Navigator.pushNamed(context, '/adding');
               },
             ),
             ListTile(
-              title: Text('Configuration', style:style,),
+              title: Text('Configuration',style: Theme.of(context).textTheme.headline5,),
               onTap: () {
                 Navigator.pushNamed(context, '/configuration');
               },
             ),
             ListTile(
-              title: Text('Connexion / Déconnexion', style:style,),
+              title: Text('Connexion / Déconnexion',style: Theme.of(context).textTheme.headline5,),
               onTap: () {
                 Navigator.pushNamed(context, '/login');
               },
             ),
             Divider(),
             ListTile(
-              title: Text('A propos', style:style,),
+              title: Text('A propos',style: Theme.of(context).textTheme.headline5,),
               onTap: () {
                 Navigator.pushNamed(context, '/apropos');
               },
@@ -177,7 +179,8 @@ class _AddingState extends State<Adding> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Text("Quel est le problème ?", style:style),
+          Text("Quel est le problème ?",
+            style: Theme.of(context).textTheme.headline6,),
           DropdownButton<String>(
             isExpanded: true,
             items: _whatList,
@@ -189,7 +192,8 @@ class _AddingState extends State<Adding> {
             },
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
-          Text('Où se situe le problème ?', style:style),
+          Text('Où se situe le problème ?',
+            style: Theme.of(context).textTheme.headline6,),
           DropdownButton<String>(
             isExpanded: true,
             itemHeight: 50,
@@ -202,25 +206,35 @@ class _AddingState extends State<Adding> {
             },
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
-          Text('Commentaire éventuel ?', style:style),
+          Text('Commentaire éventuel ?',
+            style: Theme.of(context).textTheme.headline6,),
           TextFormField(
             maxLines: 3,
             keyboardType: TextInputType.multiline,
             controller: _controllerComment,
+            style: Theme.of(context).textTheme.headline6,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                child: Text('Ajouter', style:style),
+                child: Text('Ajouter',),
                 onPressed: () {
                   _addTask();
                   //Navigator.pushNamed(context, '/listing');
                 },
               ),
+
             ],
           ),
-          Text(_message, style:style,),
+          Text(_message,style: Theme.of(context).textTheme.headline5,),
+          ElevatedButton(
+            child: Text('Liste',),
+            onPressed: () {
+              // Navigator.pushReplacementNamed(context, '/listing');
+              Navigator.pushNamed(context, '/listing');
+            },
+          ),
         ]),
       ),
     );

@@ -18,8 +18,6 @@ class _ConfigurationState extends State<Configuration> {
   String? _whereValue;
   // Report message
   String _message = '';
-  // Style
-  static const TextStyle style = TextStyle(fontSize: 20,);
 
   // Controllers for TextFormFields
   final _controllerWhere = TextEditingController();
@@ -57,7 +55,7 @@ class _ConfigurationState extends State<Configuration> {
     values.map<DropdownMenuItem<String>>((String value) {
       return DropdownMenuItem<String>(
         value: value,
-        child: Text(value,style:style),
+        child: Text(value),
       );
     }).toList();
     if (col == 'what') {
@@ -216,7 +214,8 @@ class _ConfigurationState extends State<Configuration> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text('$msg',style:style),
+            content: Text('$msg',
+              style: Theme.of(context).textTheme.headline5,),
           );
         });
   }
@@ -226,16 +225,18 @@ class _ConfigurationState extends State<Configuration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Doléances configuration',style:style),
+        title: const Text('Doléances configuration'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Text('Endroits possibles',style:style),
+          Text('Endroits possibles',
+            style: Theme.of(context).textTheme.headline5,),
           DropdownButton<String>(
             isExpanded: true,
             items: _whereList,
             value: _whereValue,
+            style: Theme.of(context).textTheme.headline6,
             onChanged: (String? value) {
               setState(() {
                 _whereValue = value ?? '';
@@ -243,23 +244,25 @@ class _ConfigurationState extends State<Configuration> {
               });
             },
           ),
-          Text('Ajout ou retrait d‘un endroit possible',style:style),
+          Text('Saisir l‘endroit possible',
+            style: Theme.of(context).textTheme.subtitle1,),
           TextFormField(
             keyboardType: TextInputType.text,
             controller: _controllerWhere,
+            style: Theme.of(context).textTheme.headline6,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                child: const Text('Ajouter',style:style),
+                child: const Text('Ajouter'),
                 onPressed: () {
                   _add('where', _controllerWhere.text);
                 },
               ),
               Padding(padding: EdgeInsets.only(left: 20)),
               ElevatedButton(
-                child: const Text('Retirer',style:style),
+                child: const Text('Retirer'),
                 onPressed: () {
                   _remove('where', _controllerWhere.text);
                 },
@@ -267,11 +270,13 @@ class _ConfigurationState extends State<Configuration> {
             ],
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
-          Text('Problèmes possibles',style:style),
+          Text('Problèmes possibles',
+            style: Theme.of(context).textTheme.headline5,),
           DropdownButton<String>(
             isExpanded: true,
             items: _whatList,
             value: _whatValue,
+            style: Theme.of(context).textTheme.headline6,
             onChanged: (String? value) {
               setState(() {
                 _whatValue = value ?? '';
@@ -279,24 +284,26 @@ class _ConfigurationState extends State<Configuration> {
               });
             },
           ),
-          Text('Ajout ou retrait d‘un problème possible',style:style),
+          Text('Saisir le problème possible',
+            style: Theme.of(context).textTheme.subtitle1,),
           TextFormField(
             keyboardType: TextInputType.text,
             controller: _controllerWhat,
+            style: Theme.of(context).textTheme.headline6,
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                child: const Text('Ajouter',style:style),
+                child: const Text('Ajouter'),
                 onPressed: () {
                   _add('what', _controllerWhat.text);
                 },
               ),
               Padding(padding: EdgeInsets.only(left: 20)),
               ElevatedButton(
-                child: const Text('Retirer',style:style),
+                child: const Text('Retirer'),
                 onPressed: () {
                   _remove('what', _controllerWhat.text);
                 },

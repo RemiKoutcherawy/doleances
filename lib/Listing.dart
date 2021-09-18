@@ -19,8 +19,6 @@ class _Listing extends State<Listing> {
   // Report message
   String _message = 'message';
   int _priority = 0;
-  // Style
-  static const TextStyle style = TextStyle(fontSize: 20,);
 
   @override
   void initState() {
@@ -59,10 +57,10 @@ class _Listing extends State<Listing> {
     var header = TableRow(
         decoration: BoxDecoration(color: Colors.blue[100],),
         children: <Widget>[
-          Container(padding: EdgeInsets.all(5), child: Text("Quoi", style:style),),
-          Container(padding: EdgeInsets.all(5), child: Text("Où", style:style),),
-          Container(padding: EdgeInsets.all(5), child: Text("Commentaire", style:style),),
-          Container(padding: EdgeInsets.all(5), child: Text("Priorité",style:style),),
+          Container(padding: EdgeInsets.all(5), child: Text("Quoi",style: Theme.of(context).textTheme.headline6,),),
+          Container(padding: EdgeInsets.all(5), child: Text("Où",style: Theme.of(context).textTheme.headline6,),),
+          Container(padding: EdgeInsets.all(5), child: Text("Commentaire",style: Theme.of(context).textTheme.headline6,),),
+          Container(padding: EdgeInsets.all(5), child: Text("Priorité",style: Theme.of(context).textTheme.headline6,),),
         ]);
     var rows = List<TableRow>.generate(
       _tasks.length,
@@ -86,13 +84,13 @@ class _Listing extends State<Listing> {
         color: color,
       ),
       children:[
-        Container(padding: EdgeInsets.all(5), child: Text(task.what,style:style),),
-        Container(padding: EdgeInsets.all(5), child: Text(task.where,style:style),),
+        Container(padding: EdgeInsets.all(5), child: Text(task.what,style: Theme.of(context).textTheme.headline6,),),
+        Container(padding: EdgeInsets.all(5), child: Text(task.where,style: Theme.of(context).textTheme.headline6,),),
         InkWell(
-          child: Container(padding: EdgeInsets.all(5), child: Text(task.comment,style:style),),
+          child: Container(padding: EdgeInsets.all(5), child: Text(task.comment,style: Theme.of(context).textTheme.headline6,),),
           onTap: () {_setPriority(task);},
         ),
-        Container(padding: EdgeInsets.all(5), child: Text(task.priority.toString(),style:style),),
+        Container(padding: EdgeInsets.all(5), child: Text(task.priority.toString(),style: Theme.of(context).textTheme.headline6,),),
       ]);
   }
 
@@ -139,40 +137,40 @@ class _Listing extends State<Listing> {
       // barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: Text('Priorité de ${task.what}',style:style),
+          title: Text('Priorité de ${task.what}',style: Theme.of(context).textTheme.headline6,),
           children: <Widget>[
             Column(
               children: [
                 SimpleDialogOption(
-                  child: Text('Prioritaire',style:style),
+                  child: Text('Prioritaire',style: Theme.of(context).textTheme.headline6,),
                   onPressed: () {
                     _priority = 1;
                     Navigator.pop(context, 1);
                   },
                 ),
                 SimpleDialogOption(
-                  child: Text('Normal',style:style),
+                  child: Text('Normal',style: Theme.of(context).textTheme.headline6,),
                   onPressed: () {
                     _priority = 0;
                     Navigator.pop(context, 0);
                   },
                 ),
                 SimpleDialogOption(
-                  child: Text('Terminé',style:style),
+                  child: Text('Terminé',style: Theme.of(context).textTheme.headline6,),
                   onPressed: () {
                     _priority = -1;
                     Navigator.pop(context, -1);
                   },
                 ),
                 SimpleDialogOption(
-                  child: Text('Supprimer la tâche',style:style),
+                  child: Text('Supprimer la tâche',style: Theme.of(context).textTheme.headline6,),
                   onPressed: () {
                     _priority = -2;
                     Navigator.pop(context, -2);
                   },
                 ),
                 SimpleDialogOption(
-                  child: Text('Annuler',style:style),
+                  child: Text('Annuler',style: Theme.of(context).textTheme.headline6,),
                   onPressed: () {
                     Navigator.pop(context, task.priority);
                   },
@@ -196,7 +194,7 @@ class _Listing extends State<Listing> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text('$msg',style:style),
+            content: Text('$msg',style: Theme.of(context).textTheme.headline6,),
           );
         });
   }
@@ -206,7 +204,7 @@ class _Listing extends State<Listing> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doléances',style:style),
+        title: Text('Doléances',style: Theme.of(context).textTheme.headline6,),
       ),
       body: SingleChildScrollView(
         child: Table(
@@ -222,7 +220,7 @@ class _Listing extends State<Listing> {
         ),
       ),
       persistentFooterButtons: [
-        Center(child: Text(_message,style:style,),),
+        Center(child: Text(_message,style: Theme.of(context).textTheme.headline6,),),
       ],
     );
   }

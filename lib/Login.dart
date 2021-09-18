@@ -2,20 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// For testing Login directly
-void main() => runApp(App());
-class App extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Login(title: 'Test Login'),
-    );
-  }
-}
 
 class Login extends StatefulWidget {
-  Login({Key? key, this.title}) : super(key: key);
-  final String? title;
+  Login({Key? key}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -25,8 +14,6 @@ class _LoginState extends State<Login> {
   String _message = '';
   bool _connected = false;
   final TextEditingController _code = TextEditingController();
-  // Style
-  static const TextStyle style = TextStyle(fontSize: 20,);
 
   @override
   void initState() {
@@ -39,13 +26,13 @@ class _LoginState extends State<Login> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(title,style:style),
+          title: Text(title),
           content: Text(
-            (e != null) ? '${(e as dynamic).message}' : 'Entrez le code...',style:style,
+            (e != null) ? '${(e as dynamic).message}' : 'Entrez le code...',
           ),
           actions: <Widget>[
             OutlinedButton(
-              child: Text('OK',style:style),
+              child: Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -73,7 +60,9 @@ class _LoginState extends State<Login> {
       }
       User? user = FirebaseAuth.instance.currentUser;
       if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop(); // Close the drawer and return
+        // Navigator.of(context).pop(); // Close the drawer and return
+        Navigator.pushReplacementNamed(context, '/adding');
+
       } else {
         _message = 'Connecté : ${user!.email}.';
         _connected = true;
@@ -120,35 +109,40 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title?? 'Login',style:style),
-      ),
-      body: Container(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
+      body: Center(
+        child: Container(
+          padding: const EdgeInsets.all(20),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                'Bienvenue',
+                style: Theme.of(context).textTheme.headline1,
+              ),
               TextFormField(
                 controller: _code,
                 keyboardType: TextInputType.visiblePassword,
                 decoration: InputDecoration(hintText: 'Code...',),
-                  style:style,
+                style: Theme.of(context).textTheme.headline1,
               ),
               Divider(),
               Center(
-                child: Text(_message,style:style,),
+                child: Text(
+                  _message,
+                  style: Theme.of(context).textTheme.headline1,
+                ),
               ),
-              Divider(),
+              const SizedBox(
+                height: 24,
+              ),
               _connected ?
               ElevatedButton(
-                child: Text('Déconnexion',style:style),
+                child: Text('Déconnexion'),
                 onPressed: () {
                   _signOut();
                 },
               ) : ElevatedButton(
-                child: Text('Connexion',style:style),
+                child: Text('Connexion'),
                 onPressed: () {
                   if (_code.text.isEmpty) {
                     _showErrorDialog(context, 'Le code est nécessaire', null);
