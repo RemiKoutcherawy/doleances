@@ -21,14 +21,38 @@ class _ListeDataTable extends State<ListeDataTable> {
   TextStyle? _style5;
   TextStyle? _style6;
 
+// TODO
+// Use https://api.flutter.dev/flutter/rendering/IntrinsicColumnWidth-class.html
+// in the columnWidths property of the Table
+
+
   // Build header
   // Width .2, .2 .5 .1 sum to 1.0
   List<DataColumn> _columns(double width) {
     return <DataColumn>[
-      DataColumn(label: Container(width: width * .2,child: Text('Quoi',style: _style5,),),),
-      DataColumn(label: Container(width: width * .2,child: Text('Où',style: _style5),),),
-      DataColumn(label: Container(width: width * .5,child: Text('Commentaire',style: _style5),),),
-      DataColumn(label: Container(width: width * .1,child: Text('Pr.',style: _style5),),),
+      DataColumn(label: Container(
+        constraints: BoxConstraints.expand(
+            width: MediaQuery.of(context).size.width *.2
+        ),
+        width: width * .2,child: Text('Quoi',style: _style5,),),),
+      DataColumn(label:VerticalDivider()),
+
+      DataColumn(label: Container(
+        constraints: BoxConstraints.expand(
+            width: MediaQuery.of(context).size.width *.2
+        ),width: width * .2,child: Text('Où',style: _style5),),),
+      DataColumn(label:VerticalDivider()),
+
+      DataColumn(label: Container(
+        constraints: BoxConstraints.expand(
+            width: MediaQuery.of(context).size.width *.5
+        ),width: width * .4,child: Text('Commentaire',style: _style5),),),
+      DataColumn(label:VerticalDivider()),
+
+      DataColumn(label: Container(
+        constraints: BoxConstraints.expand(
+            width: MediaQuery.of(context).size.width *.1
+        ),width: width * .1,child: Text('Pr.',style: _style5),),),
     ];
   }
 
@@ -51,11 +75,15 @@ class _ListeDataTable extends State<ListeDataTable> {
       default : color = index.isEven ? Colors.white: Colors.grey.withOpacity(0.2) ; break;
     }
     return DataRow(
+
         cells: <DataCell>[
-          DataCell(Text(task.what, style:_style6,)),
-          DataCell(Text(task.where, style:_style6,)),
+          DataCell(Text(task.what, style:_style6, overflow:TextOverflow.visible, softWrap: true)),
+          DataCell(VerticalDivider()),
+          DataCell(Text(task.where, style:_style6,overflow:TextOverflow.visible, softWrap: true)),
+          DataCell(VerticalDivider()),
           DataCell(Text(task.comment, style:_style6,)),
-          DataCell(Text(task.priority.toString(), style:_style6,)),
+          DataCell(VerticalDivider()),
+          DataCell(Text(task.priority.toString(), style:_style6,overflow:TextOverflow.visible, softWrap: true)),
         ],
         color: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => color),
         onSelectChanged: (bool? value) {
@@ -91,21 +119,33 @@ class _ListeDataTable extends State<ListeDataTable> {
             data: Theme.of(context).copyWith(
               dividerTheme: DividerThemeData(
                 color: Colors.black,
-                thickness: 10, // Bug not taken
+                thickness: 2, // Bug not taken
               ),
             ),
-            child: DataTable(
-              columnSpacing: 0,
-              sortAscending: false,
-              showCheckboxColumn: false,
-              showBottomBorder: true,
-              dividerThickness: 2, // Taken
-              // Heading
-              decoration: BoxDecoration(color: Colors.blue[100],),
-              headingTextStyle:TextStyle(fontStyle: FontStyle.italic, color: Colors.black),
-              // Content
-              columns: _columns(width),
-              rows: _rows(),
+            child: ConstrainedBox(
+                constraints: BoxConstraints.expand(
+                    width: MediaQuery.of(context).size.width
+                ),
+              child: DataTable(
+                columnSpacing: 0,
+                sortAscending: false,
+                showCheckboxColumn: false,
+                showBottomBorder: true,
+                dividerThickness: 2, // Between rows
+                decoration: BoxDecoration(
+                  color: Colors.blue[100],
+                  // border:Border(
+                  //     right: Divider.createBorderSide(context, width: 5.0),
+                  //     left: Divider.createBorderSide(context, width: 5.0)
+                  // ),
+                ),
+                // Heading
+                // decoration: BoxDecoration(color: Colors.blue[100],),
+                headingTextStyle:TextStyle(fontStyle: FontStyle.italic, color: Colors.black),
+                // Content
+                columns: _columns(width),
+                rows: _rows(),
+              ),
             )));
   }
 

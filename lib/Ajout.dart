@@ -93,6 +93,12 @@ class _AjoutState extends State<Ajout> {
               },
             ),
             ListTile(
+              title: Text('Liste 2',style:_style5,),
+              onTap: () {
+                Navigator.pushNamed(context, '/liste2');
+              },
+            ),
+            ListTile(
               title: Text('Ajout',style: _style5,),
               onTap: () {
                 Navigator.pushNamed(context, '/ajout');

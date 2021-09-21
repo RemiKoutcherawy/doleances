@@ -4,6 +4,7 @@ import 'package:doleances/Doleances.dart';
 
 import 'package:doleances/Login.dart';
 import 'package:doleances/Liste.dart';
+import 'package:doleances/ListeDataTable.dart';
 import 'package:doleances/Ajout.dart';
 import 'package:doleances/Configuration.dart';
 import 'package:doleances/APropos.dart';
@@ -27,6 +28,7 @@ class App extends StatelessWidget {
           initialRoute: '/',
           routes: {
             '/liste': (context) => Liste(),
+            '/liste2': (context) => ListeDataTable(),
             '/ajout': (context) => Ajout(),
             '/login': (context) => Login(),
             '/configuration': (context) => Configuration(),
