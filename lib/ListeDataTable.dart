@@ -7,9 +7,13 @@ import 'package:doleances/Task.dart';
 
 // See https://api.flutter.dev/flutter/material/DataTable-class.html
 // And https://stackoverflow.com/questions/65312609/flutter-datatable-how-set-column-width
+// And https://github.com/flutter/flutter/issues/70510
+// Use https://api.flutter.dev/flutter/rendering/IntrinsicColumnWidth-class.html
+// in the columnWidths property of the Table ?
 
 class ListeDataTable extends StatefulWidget {
   const ListeDataTable({Key? key}) : super(key: key);
+
   @override
   _ListeDataTable createState() => _ListeDataTable();
 }
@@ -18,41 +22,18 @@ class _ListeDataTable extends State<ListeDataTable> {
   // Local cache
   List<Task> _tasks = [Task()];
   Doleances? doleances;
-  TextStyle? _style5;
-  TextStyle? _style6;
-
-// TODO
-// Use https://api.flutter.dev/flutter/rendering/IntrinsicColumnWidth-class.html
-// in the columnWidths property of the Table
-
 
   // Build header
-  // Width .2, .2 .5 .1 sum to 1.0
-  List<DataColumn> _columns(double width) {
+  List<DataColumn> _columns() {
     return <DataColumn>[
-      DataColumn(label: Container(
-        constraints: BoxConstraints.expand(
-            width: MediaQuery.of(context).size.width *.2
-        ),
-        width: width * .2,child: Text('Quoi',style: _style5,),),),
-      DataColumn(label:VerticalDivider()),
-
-      DataColumn(label: Container(
-        constraints: BoxConstraints.expand(
-            width: MediaQuery.of(context).size.width *.2
-        ),width: width * .2,child: Text('Où',style: _style5),),),
-      DataColumn(label:VerticalDivider()),
-
-      DataColumn(label: Container(
-        constraints: BoxConstraints.expand(
-            width: MediaQuery.of(context).size.width *.5
-        ),width: width * .4,child: Text('Commentaire',style: _style5),),),
-      DataColumn(label:VerticalDivider()),
-
-      DataColumn(label: Container(
-        constraints: BoxConstraints.expand(
-            width: MediaQuery.of(context).size.width *.1
-        ),width: width * .1,child: Text('Pr.',style: _style5),),),
+      DataColumn(label: Text('Quoi'),),
+      DataColumn(label: VerticalDivider()),
+      DataColumn(label: Text('Où'),),
+      DataColumn(label: VerticalDivider()),
+      DataColumn(label: Text('Commentaire'),),
+      DataColumn(label: VerticalDivider()),
+      DataColumn(label: Text('Pri.'),),
+      DataColumn(label: VerticalDivider()),
     ];
   }
 
@@ -75,24 +56,36 @@ class _ListeDataTable extends State<ListeDataTable> {
       default : color = index.isEven ? Colors.white: Colors.grey.withOpacity(0.2) ; break;
     }
     return DataRow(
-
         cells: <DataCell>[
-          DataCell(Text(task.what, style:_style6, overflow:TextOverflow.visible, softWrap: true)),
+          DataCell(Text(task.what,
+              overflow: TextOverflow.visible,
+              softWrap: true)),
           DataCell(VerticalDivider()),
-          DataCell(Text(task.where, style:_style6,overflow:TextOverflow.visible, softWrap: true)),
+          DataCell(Text(
+            task.where,
+            overflow: TextOverflow.visible,
+            softWrap: true,
+          )),
           DataCell(VerticalDivider()),
-          DataCell(Text(task.comment, style:_style6,)),
+          DataCell(Text(
+            task.comment,
+            // overflow: TextOverflow.visible,
+            softWrap: true,
+          )),
           DataCell(VerticalDivider()),
-          DataCell(Text(task.priority.toString(), style:_style6,overflow:TextOverflow.visible, softWrap: true)),
+          DataCell(Text(
+            task.priority.toString(),
+            overflow: TextOverflow.visible,
+            softWrap: true,
+          )),
+          DataCell(VerticalDivider()),
         ],
         color: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => color),
         onSelectChanged: (bool? value) {
           if (!doleances!.gestion()) {
-            print ('Les clients n‘ont pas le droit de modifier la liste');
             _report('Les clients n‘ont pas le droit de modifier la liste');
             setState(() {});
           } else {
-            print ('_setPriority');
             _setPriority(task);
           }
         });
@@ -103,50 +96,21 @@ class _ListeDataTable extends State<ListeDataTable> {
     // Provider
     doleances = context.watch<Doleances>();
     _tasks = doleances!.tasks;
-    // Styles
-    _style5 = const TextStyle(
-      fontSize: 20,
-      fontWeight: FontWeight.bold,
-    );
-    _style6 = Theme.of(context).textTheme.headline6;
-    // To set Width .2, .2 .5 .1 sum to 1.0
-    final double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('ListDataTable', style: _style5,),),
-        body: Theme(
-            data: Theme.of(context).copyWith(
-              dividerTheme: DividerThemeData(
-                color: Colors.black,
-                thickness: 2, // Bug not taken
-              ),
-            ),
-            child: ConstrainedBox(
-                constraints: BoxConstraints.expand(
-                    width: MediaQuery.of(context).size.width
-                ),
-              child: DataTable(
-                columnSpacing: 0,
-                sortAscending: false,
-                showCheckboxColumn: false,
-                showBottomBorder: true,
-                dividerThickness: 2, // Between rows
-                decoration: BoxDecoration(
-                  color: Colors.blue[100],
-                  // border:Border(
-                  //     right: Divider.createBorderSide(context, width: 5.0),
-                  //     left: Divider.createBorderSide(context, width: 5.0)
-                  // ),
-                ),
-                // Heading
-                // decoration: BoxDecoration(color: Colors.blue[100],),
-                headingTextStyle:TextStyle(fontStyle: FontStyle.italic, color: Colors.black),
-                // Content
-                columns: _columns(width),
-                rows: _rows(),
-              ),
-            )));
+          title: Text('ListDataTable',),
+        ),
+        body: DataTable(
+          columnSpacing: 0,
+          sortAscending: false,
+          showCheckboxColumn: false,
+          showBottomBorder: true,
+          // Content
+          columns: _columns(),
+          rows: _rows(),
+        ),
+      );
   }
 
   // Show a Dialog to select priority, then update priority in Firebase
@@ -169,36 +133,39 @@ class _ListeDataTable extends State<ListeDataTable> {
         barrierDismissible: true,
         builder: (BuildContext context) {
           return SimpleDialog(
-            title: Text('${task.what} / ${task.where}', style:_style5,),
+            title: Text(
+              '${task.what} / ${task.where}',
+            ),
             children: <Widget>[
               Column(
                 children: [
+                  Text('${task.comment}',),
                   SimpleDialogOption(
-                    child: Text('Prioritaire',style:_style6,),
+                    child: Text('Prioritaire',),
                     onPressed: () {
                       Navigator.pop(context, 1);
                     },
                   ),
                   SimpleDialogOption(
-                    child: Text('Normal',style:_style6,),
+                    child: Text('Normal',),
                     onPressed: () {
                       Navigator.pop(context, 0);
                     },
                   ),
                   SimpleDialogOption(
-                    child: Text('Terminé',style:_style6,),
+                    child: Text('Terminé',),
                     onPressed: () {
                       Navigator.pop(context, -1);
                     },
                   ),
                   SimpleDialogOption(
-                    child: Text('Supprimer la tâche',style:_style6,),
+                    child: Text('Supprimer la tâche',),
                     onPressed: () {
                       Navigator.pop(context, -2);
                     },
                   ),
                   SimpleDialogOption(
-                    child: Text('Annuler',style:_style6,),
+                    child: Text('Annuler',),
                     onPressed: () {
                       Navigator.pop(context, task.priority);
                     },
@@ -216,7 +183,7 @@ class _ListeDataTable extends State<ListeDataTable> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text('$msg', style: _style5,),
+            content: Text('$msg',),
           );
         });
   }

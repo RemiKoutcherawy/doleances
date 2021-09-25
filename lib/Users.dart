@@ -160,7 +160,7 @@ class _UsersState extends State<Users> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Users Login',style:style),
+        title: Text('Users Login',),
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
@@ -207,7 +207,7 @@ class _UsersState extends State<Users> {
                     },
                   ),
                   ElevatedButton(
-                    child: Text('Mail de vérification',style:style),
+                    child: Text('Mail vérification',style:style),
                     onPressed: () {
                       _verifyEmail();
                     },

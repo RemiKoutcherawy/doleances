@@ -15,15 +15,15 @@ RGPD : aucune information personnelle n'est collectée, le code a pour seule fin
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doléance à propos',style: Theme.of(context).textTheme.headline6,),
+        title: Text('Doléance à propos',),
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
         child: Column(children: [
-          Text(_message,style: Theme.of(context).textTheme.headline6,),
-          OutlinedButton(
+          Text(_message, style: Theme.of(context).textTheme.headline6,),
+          ElevatedButton(
             child: Text('D‘accord !',),
-              onPressed: () {
+            onPressed: () {
               Navigator.of(context).pop();
             },
           )
