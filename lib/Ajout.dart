@@ -92,12 +92,14 @@ class _AjoutState extends State<Ajout> {
                 Navigator.pushNamed(context, '/ajout');
               },
             ),
-            ListTile(
-              title: Text('Configuration', style: Theme.of(context).textTheme.headline5,),
-              onTap: () {
-                Navigator.pushNamed(context, '/configuration');
-              },
-            ),
+            doleances.gestion()
+                ? ListTile(
+                    title: Text('Configuration', style: Theme.of(context).textTheme.headline5,),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/configuration');
+                    },
+                  )
+                : Padding(padding: EdgeInsets.only(bottom: 0)),
             ListTile(
               title: Text('Connexion / Déconnexion', style: Theme.of(context).textTheme.headline5,),
               onTap: () {

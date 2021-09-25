@@ -1,50 +1,98 @@
 # Doléances
-Cette application gère des doléances dans une liste partagée.  
-Le projet est réalisé avec Dart, Flutter, Firestore, FlutterFire.  
-Google Play  
-Apple Store  
-Web 
+Work in progress...
 
-# Pour les développeurs
+Cette application gère des doléances dans une liste partagée.\
+*This application manages grievances in a shared list.*\
+Le projet est réalisé avec Dart, Flutter, Firestore, FlutterFire.\
+*This project use Dart, Flutter, Firestore, FlutterFire.*
+
+Google Play : TODO\
+Apple Store : TODO
+
+# For developers
 
     git clone --depth 1 https://github.com/RemiKoutcherawy/doleances 
     cd doleances
+    rm -rf ios android
     flutter create .
     open -a /Applications/Android\ Studio.app .
+    open ios/Runner.xcworkspace
 
-##1. Configurer Android
-Au premier lancement Android Studio renvoie une erreur :
+Used:\
+https://firebase.flutter.dev/docs/installation/android \
+https://firebase.flutter.dev/docs/installation/ios/
+
+This page is not a tutorial, just notes.
+
+##1. Configure Android
+On first launch Android Studio returns an error:
 > Cannot fit requested classes in a single dex file (# methods: 94212 > 65536)
 
-Ouvrir `android/app/build.gradle` et ajouter `multiDexEnabled true` dans `defaultConfig` :  
+Open `android/app/build.gradle` and add `multiDexEnabled true` in `defaultConfig` :  
 > defaultConfig {  
 > multiDexEnabled true
 
-OK sur émulateur !
+TODO:
+A splash screen was provided to Flutter, but this is deprecated. 
+See flutter.dev/go/android-splash-migration for migration steps.
 
-##2. Configurer Firebase 
 
-###2.1 Créer la base Firebase [https://console.firebase.google.com/?hl=fr](https://console.firebase.google.com/?hl=fr)  puis :
-- Récupérer `google-services.json` et le mettre sous `android/app/` à côté de `build.gradle`  
-- Modifier `android/build.gradle` en ajoutant `classpath 'com.google.gms:google-services:4.3.10'`  
+##2. Configure iOS
+Get `GoogleService-Info.plist` and put it in `doleance/private` (private/ is in .gitignore)
+
+Beware Cocoapods bugs !
+>% pod install  
+>/Library/Ruby/Gems/2.6.0/gems/ethon-0.14.0/lib/ethon/curls/classes.rb:36: [BUG] Illegal instruction at 0x0000000104584000
+
+Beware Cocoapods deprecated settings !
+
+> [!] Automatically assigning platform `iOS` with version `9.0` on target `Runner` because no platform was specified. Please specify a platform for this target
+
+Beware FlutterFire bugs !
+> GeneratedPluginRegistrant.m:10:9: Module 'cloud_firestore' not found
+If you know how to fix please tell me...
+
+Steps: \
+`% rm -rf ios`\
+`% flutter create .`\
+`% cp private/GoogleService-Info.plist ios/Runner` \
+`% open ios/Runner.xcworkspace` \
+Top left, double clic on Runner to open Editor (File Runner.xcodeproj) \
+Runner / Project / Runner / iOS Deployment Target : 14.7 (or 15.0) \
+Runner / Targets / Runner / Signing @ Capabilities : => Set Team  \
+Runner / Targets / Runner / General / Display Name : Doléances \
+Runner / Targets / Runner / General / Bundle identifier : rk.doleances
+
+Top left, right clic on Runner \
+Add files to "Runner..." \
+Select `ios/Runner/GoogleService-Info.plist`
+
+Do NOT update to recommended settings, unless you can manage the errors it generates.\
+Top middle, clic on Runner > Edit Scheme... \
+On the left clic on Run / Run and select Build Configuration : Release
+
+##3. Configure Firebase
+###3.1 Create Firebase base [https://console.firebase.google.com/?hl=fr](https://console.firebase.google.com/?hl=fr)  puis :
+- Retrieve `google-services.json` and put it in `android/app/` next to `build.gradle`  
+- Edit `android/build.gradle` to add `classpath 'com.google.gms:google-services:4.3.10'`  
    > dependencies {  
-   > classpath 'com.google.gms:google-services:4.3.10' // Ajout
-- Ouvrir `android/app/build.gradle` et ajouter 2 lignes :
-  - Ajouter `apply plugin: 'com.google.gms.google-services'`
+   > classpath 'com.google.gms:google-services:4.3.10' // Added
+- Open `android/app/build.gradle` and add 2 lines :
+  - Add `apply plugin: 'com.google.gms.google-services'`
   > apply plugin: 'com.android.application'  
-  > apply plugin: 'com.google.gms.google-services' // Ajout 
-  - Ajouter `implementation platform('com.google.firebase:firebase-bom:28.4.0')`
+  > apply plugin: 'com.google.gms.google-services' // Added 
+  - Add `implementation platform('com.google.firebase:firebase-bom:28.4.0')`
   > dependencies {  
-  >  implementation platform('com.google.firebase:firebase-bom:28.4.0')  // Ajout
+  >  implementation platform('com.google.firebase:firebase-bom:28.4.0') // Added
 
-###2.2 Enregistrer les règles Firebase  
-  Créer `rk.doleances`  
-  Démarrer en mode production  
-  Définir l’emplacement Cloud Firestore : eur3 (europe-west)
+###3.2 Register Firebase rules
+  Create `rk.doleances` 
+  Start in production  mode
+  Define Cloud Firestore : eur3 (europe-west)
 - Authentification / Sign-in method   
-  Activer `Adresse e-mail/Mot de passe` // Obligatoire pour la réinitialisation du mot de passe  
-  Activer `Lien envoyé par e-mail` (connexion sans mot de passe)
-- Règles
+  Activate `Adresse e-mail/Mot de passe` // Mandatory for password reinitialisation \
+  Activate `Lien envoyé par e-mail` 
+- Rules
 ```
 rules_version = '2';
   service cloud.firestore {
@@ -61,8 +109,8 @@ rules_version = '2';
 }
 ```
 
-##3. Configurer Firebase pour Web
-###3.1 Corriger web/index.html  
+##4. Configure Firebase for Web - TODO
+###4.1 Corriger web/index.html  
 - Remplacer `href="/"` par `href="/web/"`  
 - Ajouter la config Firebase récupérée sur https://console.firebase.google.com/?hl=fr
 ```javascript
@@ -82,27 +130,13 @@ rules_version = '2';
 </script>
 </body>
 ```
-OK en local sur Chrome !
 
-##4. Configurer Firebase pour iOS - TODO
-Récupérer `GoogleService-Info.plist` et le mettre sous `ios/Runner/`  
-`flutter create -i swift .`  
-`flutter build ios`  
-`open ios/Runner.xcworkspace`  
-Attention Cocoapods bugue !
->% pod install  
->/Library/Ruby/Gems/2.6.0/gems/ethon-0.14.0/lib/ethon/curls/classes.rb:36: [BUG] Illegal instruction at 0x0000000104584000
-  
-Ne marche pas encore !
+##5. Configure hosting - TODO
+See https://firebase.google.com/docs/hosting?authuser=0   
 
-##5. Configurer l’hébergement - TODO
-Voir https://firebase.google.com/docs/hosting?authuser=0   
-Ne marche pas encore !
-
-##6. Prochaines versions - TODO
-- style avec Theme
-- image à charger et à afficher pour tous 
-- notification à envoyer dès qu’une modification est enregistrée  
+##6. Next versions - TODO
+- image upload and display for all 
+- notification to send as soon as a modification is recorded see
   https://firebase.google.com/codelabs/firebase-web#0
-- internationalisation surtout des messages d'erreur voir  
+- internationalization especially error messages see 
   https://flutter.dev/docs/development/accessibility-and-localization/internationalization
