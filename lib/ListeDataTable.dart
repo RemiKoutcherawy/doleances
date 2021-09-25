@@ -10,6 +10,14 @@ import 'package:doleances/Task.dart';
 // And https://github.com/flutter/flutter/issues/70510
 // Use https://api.flutter.dev/flutter/rendering/IntrinsicColumnWidth-class.html
 // in the columnWidths property of the Table ?
+// Table(
+//    columnWidths: {
+//      0: FlexColumnWidth(1.0),
+//      1: FlexColumnWidth(1.0),
+//      2: IntrinsicColumnWidth(), // i want this one to take the rest available space
+//    },
+//    ...
+// ),
 
 class ListeDataTable extends StatefulWidget {
   const ListeDataTable({Key? key}) : super(key: key);
@@ -32,8 +40,8 @@ class _ListeDataTable extends State<ListeDataTable> {
       DataColumn(label: VerticalDivider()),
       DataColumn(label: Text('Commentaire'),),
       DataColumn(label: VerticalDivider()),
-      DataColumn(label: Text('Pri.'),),
-      DataColumn(label: VerticalDivider()),
+      DataColumn(label: Text('Priorité'),),
+      // DataColumn(label: VerticalDivider()),
     ];
   }
 
@@ -86,11 +94,14 @@ class _ListeDataTable extends State<ListeDataTable> {
             overflow: TextOverflow.visible,
             softWrap: true,
           )),
-          DataCell(VerticalDivider()),
+          // DataCell(VerticalDivider()),
         ],
         color: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => color),
         onSelectChanged: (bool? value) {
-          if (!doleances!.gestion()) {
+          // Let 20s to correct a new task
+          if (!doleances!.gestion()
+              && (DateTime.now().millisecondsSinceEpoch - task.timestamp > 200000)
+          ) {
             _report('Les clients n‘ont pas le droit de modifier la liste');
             setState(() {});
           } else {
@@ -104,21 +115,35 @@ class _ListeDataTable extends State<ListeDataTable> {
     // Provider
     doleances = context.watch<Doleances>();
     _tasks = doleances!.tasks;
+    String? notification = doleances!.notification;
+    if (notification != null) {
+      showSnackBar(notification);
+      doleances!.notification = null;
+    }
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('ListDataTable',),
-        ),
-        body: DataTable(
-          columnSpacing: 0,
-          sortAscending: false,
-          showCheckboxColumn: false,
-          showBottomBorder: true,
-          // Content
-          columns: _columns(),
-          rows: _rows(),
-        ),
-      );
+      appBar: AppBar(
+        title: Text('Doléance liste',),
+      ),
+      body: SingleChildScrollView(
+        child:
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DataTable(
+              columnSpacing: 0,
+              sortAscending: false,
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+
+              // Content
+              columns: _columns(),
+              rows: _rows(),
+              ),
+            ],
+          ),
+      ),
+    );
   }
 
   // Show a Dialog to select priority, then update priority in Firebase
@@ -147,7 +172,10 @@ class _ListeDataTable extends State<ListeDataTable> {
             children: <Widget>[
               Column(
                 children: [
-                  Text('${task.comment}',),
+                  Text('${task.comment}',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.center,
+                  ),
                   SimpleDialogOption(
                     child: Text('Prioritaire',),
                     onPressed: () {
@@ -194,5 +222,15 @@ class _ListeDataTable extends State<ListeDataTable> {
             content: Text('$msg',),
           );
         });
+  }
+
+  // Notification in a SnackBar
+  Future<void> showSnackBar(String msg) async {
+    await Future.delayed(Duration(seconds: 1));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(msg),
+      duration: Duration(seconds: 4),
+      backgroundColor: Colors.red,
+    ));
   }
 }

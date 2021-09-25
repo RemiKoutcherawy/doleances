@@ -77,7 +77,7 @@ class _ConfigurationState extends State<Configuration> {
     }
     // Check value to add
     if (controller.text == '') {
-      _report('Donnez un nom !');
+      _report('Donner un nom !');
       return;
     } else if (list.contains(controller.text)) {
       _report('La liste contient déjà ${controller.text}');
@@ -110,7 +110,7 @@ class _ConfigurationState extends State<Configuration> {
     }
     // Check value to remove
     if (value == '') {
-      _report('Donnez un nom !');
+      _report('Donner un nom !');
       return;
     } else if (!list.contains(value)) {
       _report('La liste ne contient pas $value');
@@ -154,7 +154,8 @@ class _ConfigurationState extends State<Configuration> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        child: Column(
+            children: [
           Text('Problèmes possibles', style: Theme.of(context).textTheme.headline5,),
           DropdownButton<String>(
             style: Theme.of(context).textTheme.headline5,
@@ -174,7 +175,6 @@ class _ConfigurationState extends State<Configuration> {
             style: Theme.of(context).textTheme.headline5,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
                 child: const Text('Ajouter'),
@@ -212,7 +212,6 @@ class _ConfigurationState extends State<Configuration> {
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
                 child: const Text('Ajouter'),

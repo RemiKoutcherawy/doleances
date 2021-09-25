@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:doleances/Doleances.dart';
 
 import 'package:doleances/Login.dart';
-import 'package:doleances/ListeTable.dart';
 import 'package:doleances/ListeDataTable.dart';
 import 'package:doleances/Ajout.dart';
 import 'package:doleances/Configuration.dart';
@@ -27,7 +26,6 @@ class App extends StatelessWidget {
       theme: appTheme,
       initialRoute: '/',
       routes: {
-        '/listeT': (context) => ListeTable(),
         '/listeDT': (context) => ListeDataTable(),
         '/ajout': (context) => Ajout(),
         '/login': (context) => Login(),
@@ -45,17 +43,20 @@ class App extends StatelessWidget {
 final appTheme = ThemeData(
   // For AppBar
   appBarTheme: AppBarTheme(
-    textTheme: TextTheme(
-      headline6: TextStyle(
-        fontSize: 30,
+      toolbarTextStyle: TextStyle(
+        fontSize: 24,
       ),
-    ),
-  ),
+      titleTextStyle: TextStyle(
+        fontSize: 24,
+      )),
 
   // For Dialog
   dialogTheme: DialogTheme(  //).copyWith(
-    titleTextStyle: TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold ),
-    contentTextStyle: TextStyle(fontSize: 20, color: Colors.black),
+    titleTextStyle: TextStyle(fontSize: 22, color: Colors.black, ),
+    contentTextStyle: TextStyle(fontSize: 20, color: Colors.black, ),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+    ),
   ),
 
   // For text()
@@ -93,6 +94,7 @@ final appTheme = ThemeData(
   // For ElevatedButton
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
+      primary: Colors.pinkAccent,
       textStyle: const TextStyle(
         fontSize: 24,
       ),

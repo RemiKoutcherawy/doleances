@@ -71,23 +71,17 @@ class _AjoutState extends State<Ajout> {
       ),
       drawer: Drawer(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            DrawerHeader(
-              child: Icon(
-                Icons.account_circle,
-                size: 96,
-              ),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 20)),
+            // DrawerHeader(
+            //   child: Icon(
+            //     Icons.account_circle,
+            //     size: 96,
+            //   ),
+            // ),
+            Padding(padding: EdgeInsets.only(bottom: 24)),
+            Divider(),
             ListTile(
-              title: Text('Liste Table', style: Theme.of(context).textTheme.headline5,),
-              onTap: () {
-                Navigator.pushNamed(context, '/listeT');
-              },
-            ),
-            ListTile(
-              title: Text('Liste DataTable', style: Theme.of(context).textTheme.headline5,),
+              title: Text('Liste', style: Theme.of(context).textTheme.headline5,),
               onTap: () {
                 Navigator.pushNamed(context, '/listeDT');
               },
@@ -98,12 +92,14 @@ class _AjoutState extends State<Ajout> {
                 Navigator.pushNamed(context, '/ajout');
               },
             ),
-            ListTile(
-              title: Text('Configuration', style: Theme.of(context).textTheme.headline5,),
-              onTap: () {
-                Navigator.pushNamed(context, '/configuration');
-              },
-            ),
+            doleances.gestion()
+                ? ListTile(
+                    title: Text('Configuration', style: Theme.of(context).textTheme.headline5,),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/configuration');
+                    },
+                  )
+                : Padding(padding: EdgeInsets.only(bottom: 0)),
             ListTile(
               title: Text('Connexion / Déconnexion', style: Theme.of(context).textTheme.headline5,),
               onTap: () {
@@ -122,7 +118,8 @@ class _AjoutState extends State<Ajout> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        child: Column(
+            children: [
           Text("Quel est le problème ?", style: Theme.of(context).textTheme.headline5,),
           DropdownButton<String>(
             style: Theme.of(context).textTheme.headline5,
@@ -162,19 +159,20 @@ class _AjoutState extends State<Ajout> {
                   _report('''Ajoutée : 
 $_whatValue / $_whereValue 
 $comment''');
+                  Navigator.pushNamed(context, '/listeDT');
                 },
               ),
             ],
           ),
           ElevatedButton(
-            child: Text('Voir liste',),
+            child: Text('liste',),
             onPressed: () {
-              Navigator.pushNamed(context, '/listeT');
+              Navigator.pushNamed(context, '/listeDT');
             },
           ),
           doleances.gestion()
               ? ElevatedButton(
-                  child: Text('Configurer',),
+                  child: Text('Configuration',),
                   onPressed: () {
                     Navigator.pushNamed(context, '/configuration');
                   },
