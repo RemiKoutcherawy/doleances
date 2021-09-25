@@ -3,10 +3,10 @@ Work in progress...
 
 Cette application gère des doléances dans une liste partagée.\
 *This application manages grievances in a shared list.*\
-Le projet est réalisé avec Dart, Flutter, Firestore, FlutterFire.\
+Première version réalisée avec Dart, Flutter, Firebase.\
 *This project use Dart, Flutter, Firestore, FlutterFire.*
 
-Google Play : TODO\
+Google Play : https://play.google.com/store/apps/details?id=rk.doleances \
 Apple Store : TODO
 
 # For developers
@@ -70,6 +70,8 @@ Select `ios/Runner/GoogleService-Info.plist`
 Do NOT update to recommended settings, unless you can manage the errors it generates.\
 Top middle, clic on Runner > Edit Scheme... \
 On the left clic on Run / Run and select Build Configuration : Release
+Take your time...
+Xcode build done.  244,8s
 
 ##3. Configure Firebase
 ###3.1 Create Firebase base [https://console.firebase.google.com/?hl=fr](https://console.firebase.google.com/?hl=fr)  puis :
