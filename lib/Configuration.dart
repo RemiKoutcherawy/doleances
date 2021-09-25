@@ -10,13 +10,11 @@ class Configuration extends StatefulWidget {
 
 class _ConfigurationState extends State<Configuration> {
   // Dropdown list and selected value
-  List<DropdownMenuItem<String>> _whatList = [DropdownMenuItem(child: Text('Rien',))];
+  List<DropdownMenuItem<String>> _whatList = [DropdownMenuItem(child: Text('Recupération...',))];
   String? _whatValue;
-  List<DropdownMenuItem<String>> _whereList = [DropdownMenuItem(child: Text('Ici',))];
+  List<DropdownMenuItem<String>> _whereList = [DropdownMenuItem(child: Text('Récupération...',))];
   String? _whereValue;
-  // Styles
-  TextStyle? _style6;
-  TextStyle? _style5;
+
   // Controllers for TextFormFields
   final _controllerWhat = TextEditingController();
   final _controllerWhere = TextEditingController();
@@ -25,6 +23,7 @@ class _ConfigurationState extends State<Configuration> {
   void initState() {
     super.initState();
   }
+
   @override
   void dispose() {
     _controllerWhere.dispose();
@@ -32,17 +31,33 @@ class _ConfigurationState extends State<Configuration> {
     super.dispose();
   }
 
+  //  Widget for underline
+  Container underline2 = Container(
+    height: 3.0,
+    decoration: const BoxDecoration(
+      border: Border(bottom: BorderSide(color: Colors.blue, width: 3.0,),),
+    ),
+  );
+
   // Fetch and set dropdown values from Firebase
   void setDropdownsValues(Doleances doleances) async {
     List<String> whatStringList = doleances.whatStringList;
     List<String> whereStringList = doleances.whereStringList;
     _whatList = whatStringList.map<DropdownMenuItem<String>>((String value) {
-      return DropdownMenuItem<String>(value: value, child: Text(value, style: _style6,),);
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value, style: Theme.of(context).textTheme.headline5,),
+      );
     }).toList();
     _whatValue ?? whatStringList.first;
-    if (!whatStringList.contains(_whatValue)) {_whatValue = whatStringList.first;}
+    if (!whatStringList.contains(_whatValue)) {
+      _whatValue = whatStringList.first;
+    }
     _whereList = whereStringList.map<DropdownMenuItem<String>>((String value) {
-      return DropdownMenuItem<String>(value: value, child: Text(value, style: _style6,),);
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value, style: Theme.of(context).textTheme.headline5,),
+      );
     }).toList();
     _whereValue ?? whereStringList.first;
     if (!whereStringList.contains(_whereValue)) _whereValue = whereStringList.first;
@@ -82,7 +97,7 @@ class _ConfigurationState extends State<Configuration> {
 
   // Remove String val from Array col in Firebase
   Future<void> _remove(TextEditingController controller, Doleances doleances) async {
-    String col ='';
+    String col = '';
     String value = controller.text;
     // Retrieve list of strings from controller
     List<String> list = [];
@@ -100,6 +115,8 @@ class _ConfigurationState extends State<Configuration> {
     } else if (!list.contains(value)) {
       _report('La liste ne contient pas $value');
       return;
+    } else if (!doleances.gestion()) {
+      _report('Retrait en local. Les clients n‘ont pas le droit de modifier la configuration.');
     } else {
       // Ok remove from list
       list.remove(value);
@@ -115,12 +132,12 @@ class _ConfigurationState extends State<Configuration> {
   // Report in a Dialog
   Future<void> _report(msg) async {
     await showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: Text('$msg', style: _style5,),
-        );
-      });
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text('$msg',),
+          );
+        });
   }
 
   // Widget
@@ -128,9 +145,6 @@ class _ConfigurationState extends State<Configuration> {
   Widget build(BuildContext context) {
     // Provider
     Doleances doleances = context.watch<Doleances>();
-    // Styles
-    _style5 = Theme.of(context).textTheme.headline5;
-    _style6 = Theme.of(context).textTheme.headline6;
     // Build _whatList and _whereList from doleances
     setDropdownsValues(doleances);
 
@@ -141,9 +155,10 @@ class _ConfigurationState extends State<Configuration> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-          Text('Problèmes possibles',
-            style: _style5,),
+          Text('Problèmes possibles', style: Theme.of(context).textTheme.headline5,),
           DropdownButton<String>(
+            style: Theme.of(context).textTheme.headline5,
+            underline: underline2,
             isExpanded: true,
             items: _whatList,
             value: _whatValue,
@@ -152,12 +167,11 @@ class _ConfigurationState extends State<Configuration> {
               _controllerWhat.text = value;
             }),
           ),
-          Text('Saisir le problème possible',
-            style: Theme.of(context).textTheme.subtitle1,),
+          Text('Saisir le problème possible', style: Theme.of(context).textTheme.subtitle1,),
           TextFormField(
             keyboardType: TextInputType.text,
             controller: _controllerWhat,
-            style:_style6,
+            style: Theme.of(context).textTheme.headline5,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -178,9 +192,10 @@ class _ConfigurationState extends State<Configuration> {
             ],
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
-          Text('Endroits possibles',
-            style: _style5,),
+          Text('Endroits possibles', style: Theme.of(context).textTheme.headline5,),
           DropdownButton<String>(
+            style: Theme.of(context).textTheme.headline5,
+            underline: underline2,
             isExpanded: true,
             items: _whereList,
             value: _whereValue,
@@ -189,12 +204,11 @@ class _ConfigurationState extends State<Configuration> {
               _controllerWhere.text = value;
             }),
           ),
-          Text('Saisir l‘endroit possible',
-            style: Theme.of(context).textTheme.subtitle1,),
+          Text('Saisir l‘endroit possible', style: Theme.of(context).textTheme.subtitle1,),
           TextFormField(
             keyboardType: TextInputType.text,
             controller: _controllerWhere,
-            style:_style6,
+            style: Theme.of(context).textTheme.headline5,
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
           Row(
@@ -203,7 +217,7 @@ class _ConfigurationState extends State<Configuration> {
               ElevatedButton(
                 child: const Text('Ajouter'),
                 onPressed: () {
-                  _add( _controllerWhere, doleances);
+                  _add(_controllerWhere, doleances);
                 },
               ),
               Padding(padding: EdgeInsets.only(left: 20)),
@@ -215,11 +229,8 @@ class _ConfigurationState extends State<Configuration> {
               ),
             ],
           ),
-// Todo trouver le moyen d'afficher les doleances.message en Dialog
-//          Text(doleances.message, style:_style5, ),
         ]),
       ),
     );
   }
 }
-

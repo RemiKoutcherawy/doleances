@@ -22,11 +22,11 @@ class Doleances with ChangeNotifier {
       // Hash would be overkill just to choose between profiles.
       if (code.contains('test')) { // Code isn't verified here, all you know is code contains test
         await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: 'test@doléances.fr', password: code);
+            .signInWithEmailAndPassword(email: 'test@doléances.fr', password: code *2);
       } else if (code.contains('s')) { // Code isn't verified here, all you know is code contains s
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: 'client@doléances.fr', password: code);
-      } else if (code.contains('S')) {
+      } else if (code.contains('St')) {
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: 'gestion@doléances.fr', password: code);
       }
@@ -35,13 +35,14 @@ class Doleances with ChangeNotifier {
       connected = true;
 
       // Fetch items for Dropdown
-      fetchChoices();
+      await fetchChoices();
 
       // Fetch doleances for Liste
-      fetchDoleances();
+      await fetchDoleances();
 
     } on FirebaseAuthException catch (e) {
       message = 'Erreur ${(e as dynamic).message}';
+      notifyListeners();
     }
   }
 
