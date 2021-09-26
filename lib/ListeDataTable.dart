@@ -98,19 +98,27 @@ class _ListeDataTable extends State<ListeDataTable> {
     _tasks = doleances!.tasks;
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('ListDataTable',),
+      appBar: AppBar(
+        title: Text('ListDataTable',),
+      ),
+      body: Row(// a dirty trick to make the DataTable fit width
+          children: <Widget>[
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: DataTable(
+              columnSpacing: 0,
+              sortAscending: false,
+              showCheckboxColumn: false,
+              showBottomBorder: true,
+              // Content
+              columns: _columns(),
+              rows: _rows(),
+            ),
+          ),
         ),
-        body: DataTable(
-          columnSpacing: 0,
-          sortAscending: false,
-          showCheckboxColumn: false,
-          showBottomBorder: true,
-          // Content
-          columns: _columns(),
-          rows: _rows(),
-        ),
-      );
+      ]),
+    );
   }
 
   // Show a Dialog to select priority, then update priority in Firebase

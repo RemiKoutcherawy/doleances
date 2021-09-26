@@ -6,8 +6,8 @@ Cette application gère des doléances dans une liste partagée.\
 Première version réalisée avec Dart, Flutter, Firebase.\
 *This project use Dart, Flutter, Firestore, FlutterFire.*
 
-Google Play : https://play.google.com/store/apps/details?id=rk.doleances \
-Apple Store : TODO
+Google Play : En cours d'examen https://play.google.com/store/apps/details?id=rk.doleances \
+Apple Store : Doléances iOS 1.0 En attente de vérification
 
 # For developers
 
