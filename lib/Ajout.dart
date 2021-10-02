@@ -72,7 +72,14 @@ class _AjoutState extends State<Ajout> {
       drawer: Drawer(
         child: Column(
           children: [
+            // DrawerHeader(
+            //   child: Icon(
+            //     Icons.account_circle,
+            //     size: 96,
+            //   ),
+            // ),
             Padding(padding: EdgeInsets.only(bottom: 24)),
+            Divider(),
             ListTile(
               title: Text('Liste', style: Theme.of(context).textTheme.headline5,),
               onTap: () {
@@ -152,19 +159,20 @@ class _AjoutState extends State<Ajout> {
                   _report('''Ajoutée : 
 $_whatValue / $_whereValue 
 $comment''');
+                  Navigator.pushNamed(context, '/listeDT');
                 },
               ),
             ],
           ),
           ElevatedButton(
-            child: Text('Voir liste',),
+            child: Text('liste',),
             onPressed: () {
               Navigator.pushNamed(context, '/listeDT');
             },
           ),
           doleances.gestion()
               ? ElevatedButton(
-                  child: Text('Configurer',),
+                  child: Text('Configuration',),
                   onPressed: () {
                     Navigator.pushNamed(context, '/configuration');
                   },

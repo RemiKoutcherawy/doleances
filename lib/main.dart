@@ -43,17 +43,20 @@ class App extends StatelessWidget {
 final appTheme = ThemeData(
   // For AppBar
   appBarTheme: AppBarTheme(
-    textTheme: TextTheme(
-      headline6: TextStyle(
-        fontSize: 30,
+      toolbarTextStyle: TextStyle(
+        fontSize: 24,
       ),
-    ),
-  ),
+      titleTextStyle: TextStyle(
+        fontSize: 24,
+      )),
 
   // For Dialog
   dialogTheme: DialogTheme(  //).copyWith(
-    titleTextStyle: TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold ),
-    contentTextStyle: TextStyle(fontSize: 20, color: Colors.black),
+    titleTextStyle: TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold, ),
+    contentTextStyle: TextStyle(fontSize: 20, color: Colors.black,),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+    ),
   ),
 
   // For text()
@@ -91,6 +94,7 @@ final appTheme = ThemeData(
   // For ElevatedButton
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
+      primary: Colors.pinkAccent,
       textStyle: const TextStyle(
         fontSize: 24,
       ),

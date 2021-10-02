@@ -70,7 +70,6 @@ class Doleances with ChangeNotifier {
 
         notifyListeners();
       } else {
-        print ('Already connected');
         connected = true;
 
         // Fetch items for Dropdown and liste

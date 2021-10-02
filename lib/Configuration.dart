@@ -77,7 +77,7 @@ class _ConfigurationState extends State<Configuration> {
     }
     // Check value to add
     if (controller.text == '') {
-      _report('Donnez un nom !');
+      _report('Donner un nom !');
       return;
     } else if (list.contains(controller.text)) {
       _report('La liste contient déjà ${controller.text}');
@@ -110,7 +110,7 @@ class _ConfigurationState extends State<Configuration> {
     }
     // Check value to remove
     if (value == '') {
-      _report('Donnez un nom !');
+      _report('Donner un nom !');
       return;
     } else if (!list.contains(value)) {
       _report('La liste ne contient pas $value');

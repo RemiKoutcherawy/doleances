@@ -110,6 +110,7 @@ class _ListeDataTable extends State<ListeDataTable> {
         title: Text('Doléance liste',),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(left: 10),
         child: DataTable(
           columnSpacing: 0,
           sortAscending: false,
@@ -150,7 +151,10 @@ class _ListeDataTable extends State<ListeDataTable> {
             children: <Widget>[
               Column(
                 children: [
-                  Text('${task.comment}',),
+                  Text('${task.comment}',
+                    style: TextStyle(fontStyle: FontStyle.italic),
+                    textAlign: TextAlign.center,
+                  ),
                   SimpleDialogOption(
                     child: Text('Prioritaire',),
                     onPressed: () {
