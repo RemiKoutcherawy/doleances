@@ -94,6 +94,8 @@ class Doleances with ChangeNotifier {
       // Refresh cache
       whatStringList = docUpdated.get('what').cast<String>();
       whereStringList = docUpdated.get('where').cast<String>();
+      whatStringList.sort((a, b) => a.compareTo(b));
+      whereStringList.sort((a, b) => a.compareTo(b));
       message = 'Liste de choix mise à jour. $col: $list';
       notifyListeners();
     } on FirebaseAuthException catch (e) {
