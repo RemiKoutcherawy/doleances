@@ -10,6 +10,14 @@ import 'package:doleances/Task.dart';
 // And https://github.com/flutter/flutter/issues/70510
 // Use https://api.flutter.dev/flutter/rendering/IntrinsicColumnWidth-class.html
 // in the columnWidths property of the Table ?
+// Table(
+//    columnWidths: {
+//      0: FlexColumnWidth(1.0),
+//      1: FlexColumnWidth(1.0),
+//      2: IntrinsicColumnWidth(), // i want this one to take the rest available space
+//    },
+//    ...
+// ),
 
 class ListeDataTable extends StatefulWidget {
   const ListeDataTable({Key? key}) : super(key: key);
@@ -32,8 +40,8 @@ class _ListeDataTable extends State<ListeDataTable> {
       DataColumn(label: VerticalDivider()),
       DataColumn(label: Text('Commentaire'),),
       DataColumn(label: VerticalDivider()),
-      DataColumn(label: Text('Pri.'),),
-      DataColumn(label: VerticalDivider()),
+      DataColumn(label: Text('Priorité'),),
+      // DataColumn(label: VerticalDivider()),
     ];
   }
 
@@ -78,7 +86,7 @@ class _ListeDataTable extends State<ListeDataTable> {
             overflow: TextOverflow.visible,
             softWrap: true,
           )),
-          DataCell(VerticalDivider()),
+          // DataCell(VerticalDivider()),
         ],
         color: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => color),
         onSelectChanged: (bool? value) {
@@ -99,25 +107,20 @@ class _ListeDataTable extends State<ListeDataTable> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('ListDataTable',),
+        title: Text('Doléance liste',),
       ),
-      body: Row(// a dirty trick to make the DataTable fit width
-          children: <Widget>[
-        Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: DataTable(
-              columnSpacing: 0,
-              sortAscending: false,
-              showCheckboxColumn: false,
-              showBottomBorder: true,
-              // Content
-              columns: _columns(),
-              rows: _rows(),
-            ),
-          ),
+      body: SingleChildScrollView(
+        child: DataTable(
+          columnSpacing: 0,
+          sortAscending: false,
+          showCheckboxColumn: false,
+          showBottomBorder: true,
+
+          // Content
+          columns: _columns(),
+          rows: _rows(),
         ),
-      ]),
+      ),
     );
   }
 

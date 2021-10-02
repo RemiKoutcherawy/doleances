@@ -71,15 +71,8 @@ class _AjoutState extends State<Ajout> {
       ),
       drawer: Drawer(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            DrawerHeader(
-              child: Icon(
-                Icons.account_circle,
-                size: 96,
-              ),
-            ),
-            Padding(padding: EdgeInsets.only(bottom: 20)),
+            Padding(padding: EdgeInsets.only(bottom: 24)),
             ListTile(
               title: Text('Liste', style: Theme.of(context).textTheme.headline5,),
               onTap: () {
@@ -118,7 +111,8 @@ class _AjoutState extends State<Ajout> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        child: Column(
+            children: [
           Text("Quel est le problème ?", style: Theme.of(context).textTheme.headline5,),
           DropdownButton<String>(
             style: Theme.of(context).textTheme.headline5,

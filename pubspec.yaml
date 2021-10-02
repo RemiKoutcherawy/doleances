@@ -8,6 +8,7 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.0.7
+  flutter_secure_storage: ^4.2.1
   firebase_core: ^1.1.0
   firebase_auth: ^3.1.0
   cloud_firestore: ^2.5.1

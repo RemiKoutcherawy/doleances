@@ -18,16 +18,20 @@ RGPD : aucune information personnelle n'est collectée, le code a pour seule fin
         title: Text('Doléance à propos',),
       ),
       body: Container(
+        alignment: Alignment.center,
         padding: const EdgeInsets.all(20),
-        child: Column(children: [
-          Text(_message, style: Theme.of(context).textTheme.headline6,),
-          ElevatedButton(
-            child: Text('D‘accord !',),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ]),
+        child: SingleChildScrollView (
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+              children: [Text(_message, style: Theme.of(context).textTheme.headline6,),
+                ElevatedButton(
+                  child: Text('D‘accord !',),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )]
+            )
+        ),
       ),
     );
   }

@@ -154,7 +154,8 @@ class _ConfigurationState extends State<Configuration> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+        child: Column(
+            children: [
           Text('Problèmes possibles', style: Theme.of(context).textTheme.headline5,),
           DropdownButton<String>(
             style: Theme.of(context).textTheme.headline5,
@@ -174,7 +175,6 @@ class _ConfigurationState extends State<Configuration> {
             style: Theme.of(context).textTheme.headline5,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
                 child: const Text('Ajouter'),
@@ -212,7 +212,6 @@ class _ConfigurationState extends State<Configuration> {
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
                 child: const Text('Ajouter'),
