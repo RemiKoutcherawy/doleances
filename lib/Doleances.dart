@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // See https://firebase.flutter.dev/docs/firestore/usage/
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+// import 'package:provider/provider.dart';
 import 'package:doleances/Task.dart';
 
 // Provider
@@ -15,17 +17,21 @@ class Doleances with ChangeNotifier {
   List<String> whatStringList = ['Rien'];
   List<String> whereStringList= ['Ici'];
   List<Task> tasks = [];
+  // Listen to List updates
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _subscription;
+  String? notification;
 
   // Connect with code
   Future<void> connect({String? codeToTest}) async {
-    String code = '';
+    String code = 'wrongCode';
     if (codeToTest == null) {
-      // Check sored identity if any
+      // Check stored identity if any
       final storage = new FlutterSecureStorage();
       String? storedCode = await storage.read(key: 'code');
       // Use stored code, if any
       if (storedCode != null) {
         code = storedCode;
+        // Should show a spinner not do get another code during check
       } else {
         // No code. No stored code.
         return;
@@ -36,18 +42,29 @@ class Doleances with ChangeNotifier {
     // We have a code to test
     try {
       await Firebase.initializeApp();
+
+      // Listen to List updates and push then as a notifcation
+      _subscription = FirebaseFirestore.instance.collection('doleances')
+          .orderBy('timestamp').limitToLast(1)
+          .snapshots()
+          .listen((snapshot) {
+        print('connect in listen subscription ${snapshot.docs.length}');
+        // notifyListeners();
+      }, onDone: () {
+        print('connect in listen subscription onDone');
+        notifyListeners();
+      });
+
       user = FirebaseAuth.instance.currentUser;
       // User is not already connected
       if (FirebaseAuth.instance.currentUser == null) {
         // 3 registered profiles, 3 codes, not in clear, this is opensource !
         // Hash would be overkill just to choose between profiles.
-        if (code.contains(
-            'test')) { // Code isn't verified here, all you know is code contains test
+        if (code.contains('test')) { // Code isn't verified here, all you know is code contains test
           await FirebaseAuth.instance
               .signInWithEmailAndPassword(
               email: 'test@doléances.fr', password: code * 2);
-        } else if (code.contains(
-            's')) { // Code isn't verified here, all you know is code contains s
+        } else if (code.contains('s')) { // Code isn't verified here, all you know is code contains s
           await FirebaseAuth.instance
               .signInWithEmailAndPassword(
               email: 'client@doléances.fr', password: code);
@@ -60,7 +77,7 @@ class Doleances with ChangeNotifier {
         message = 'Connecté : ${user!.email}.';
         connected = true;
 
-        // Store code
+        // Store code locally
         final storage = new FlutterSecureStorage();
         await storage.write(key:'code', value:code);
 
@@ -87,6 +104,12 @@ class Doleances with ChangeNotifier {
       notifyListeners();
     }
   }
+   //
+  Future<void> sendNotification() async {
+    await fetchDoleances();
+    notification = 'Liste mise à jour';
+    notifyListeners();
+  }
 
   // Disconnect current user
   void signOut() async {
@@ -97,6 +120,7 @@ class Doleances with ChangeNotifier {
       final storage = new FlutterSecureStorage();
       storage.delete(key:'code');
       notified = false;
+      _subscription?.cancel();
     } on FirebaseAuthException catch (e) {
       message = 'Erreur ${(e as dynamic).message}';
     }
@@ -155,17 +179,19 @@ class Doleances with ChangeNotifier {
     if (mail.contains('test')) {
       message = 'Ajouté en local seulement. Test n‘a pas le droit de modifier la base.';
     } else if (mail.contains('client') || mail.contains('gestion')) {
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
       // Add to class field tasks
-      Task task = Task(id: 'toSet', what: what, where: where, comment: comment, priority: 0);
+      Task task = Task(id: 'toSet', what: what, where: where, comment: comment, priority: 0, timestamp:timestamp);
       tasks.add(task);
       // Get and add task to the remote collection,
       CollectionReference<Map<String, dynamic>> doleances = FirebaseFirestore.instance.collection('doleances');
+      doleances.orderBy('timestamp', descending: true);
       doleances.add(<String, dynamic>{
-        'timestamp': DateTime.now().millisecondsSinceEpoch,
         'what': what,
         'where': where,
         'comment': comment,
         'priority': 0,
+        'timestamp': timestamp,
       }).then((DocumentReference<Map<String, dynamic>> value) {
         task.id = value.id;
         message = '''Ajoutée : $what / $where ${value.id}
@@ -191,10 +217,20 @@ class Doleances with ChangeNotifier {
       String where = d.get('where');
       String comment = d.get('comment');
       int priority = int.parse(d.get('priority').toString());
-      Task task = Task(id: id, what: what, where: where, comment: comment, priority: priority);
+      int timestamp = int.parse(d.get('timestamp').toString());
+      Task task = Task(
+          id: id,
+          what: what,
+          where: where,
+          comment: comment,
+          priority: priority,
+          timestamp: timestamp);
       // Add to class field tasks
       tasks.add(task);
     }
+    print ('fetchDoleances after list build ${tasks.length}');
+    tasks.sort((Task a, Task b) => a.timestamp.compareTo(b.timestamp));
+
     message = 'Doléances récupérées';
   }
 

@@ -23,7 +23,8 @@ RGPD : aucune information personnelle n'est collectée, le code a pour seule fin
         child: SingleChildScrollView (
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-              children: [Text(_message, style: Theme.of(context).textTheme.headline6,),
+              children: [
+                Text(_message, style: Theme.of(context).textTheme.headline6,),
                 ElevatedButton(
                   child: Text('D‘accord !',),
                   onPressed: () {

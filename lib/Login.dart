@@ -12,8 +12,8 @@ class Login extends StatelessWidget {
   Widget build(BuildContext context) {
     // Provider
     Doleances doleances = context.watch<Doleances>();
-    // Check stored connection, no code needed
-    doleances.connect();
+    // Check stored connection, no code needed => Bug
+    // doleances.connect();
 
     // Widget
     return Scaffold(
@@ -93,7 +93,8 @@ class Login extends StatelessWidget {
 
   // Connect in a Future to await Firebase
   Future<void> _connect(Doleances doleances, BuildContext context) async {
-    await doleances.connect(codeToTest : _code.text);
+    // Trim trailing spaces
+    await doleances.connect(codeToTest : _code.text.trim());
     if (doleances.connected) {
       if (Navigator.of(context).canPop()) {
         Navigator.of(context).pop(); // Close the drawer and return

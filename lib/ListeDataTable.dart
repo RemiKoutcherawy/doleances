@@ -90,7 +90,10 @@ class _ListeDataTable extends State<ListeDataTable> {
         ],
         color: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => color),
         onSelectChanged: (bool? value) {
-          if (!doleances!.gestion()) {
+          // Let 20s to correct a new task
+          if (!doleances!.gestion()
+              && (DateTime.now().millisecondsSinceEpoch - task.timestamp > 200000)
+          ) {
             _report('Les clients n‘ont pas le droit de modifier la liste');
             setState(() {});
           } else {
@@ -104,23 +107,33 @@ class _ListeDataTable extends State<ListeDataTable> {
     // Provider
     doleances = context.watch<Doleances>();
     _tasks = doleances!.tasks;
+    String? notification = doleances!.notification;
+    if (notification != null) {
+      showSnackBar(notification);
+      doleances!.notification = null;
+    }
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Doléance liste',),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(left: 10),
-        child: DataTable(
-          columnSpacing: 0,
-          sortAscending: false,
-          showCheckboxColumn: false,
-          showBottomBorder: true,
+        child:
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              DataTable(
+              columnSpacing: 0,
+              sortAscending: false,
+              showCheckboxColumn: false,
+              showBottomBorder: true,
 
-          // Content
-          columns: _columns(),
-          rows: _rows(),
-        ),
+              // Content
+              columns: _columns(),
+              rows: _rows(),
+              ),
+            ],
+          ),
       ),
     );
   }
@@ -201,5 +214,15 @@ class _ListeDataTable extends State<ListeDataTable> {
             content: Text('$msg',),
           );
         });
+  }
+
+  // Notification in a SnackBar
+  Future<void> showSnackBar(String msg) async {
+    await Future.delayed(Duration(seconds: 1));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(msg),
+      duration: Duration(seconds: 4),
+      backgroundColor: Colors.red,
+    ));
   }
 }
