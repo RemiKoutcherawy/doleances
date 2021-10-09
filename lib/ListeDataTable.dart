@@ -136,7 +136,7 @@ class _ListeDataTable extends State<ListeDataTable> {
                 child: ElevatedButton(
                   child: Text('Ajout'),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/ajout');
+                    Navigator.pushReplacementNamed(context, '/ajout');
                   },
                 ),
               ),
@@ -144,7 +144,7 @@ class _ListeDataTable extends State<ListeDataTable> {
                 child: ElevatedButton(
                   child: Text('Déconnexion'),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/login');
+                    Navigator.pushReplacementNamed(context, '/login');
                   },
                 ),
               ),

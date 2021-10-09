@@ -28,7 +28,7 @@ RGPD : aucune information personnelle n'est collectée, le code a pour seule fin
                 ElevatedButton(
                   child: Text('D‘accord !',),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pushReplacementNamed(context, '/login');
                   },
                 )]
             )

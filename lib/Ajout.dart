@@ -69,53 +69,6 @@ class _AjoutState extends State<Ajout> {
       appBar: AppBar(
         title: Text('Doléances ajout',),
       ),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            // DrawerHeader(
-            //   child: Icon(
-            //     Icons.account_circle,
-            //     size: 96,
-            //   ),
-            // ),
-            Padding(padding: EdgeInsets.only(bottom: 24)),
-            Divider(),
-            ListTile(
-              title: Text('Liste', style: Theme.of(context).textTheme.headline5,),
-              onTap: () {
-                Navigator.pushNamed(context, '/listeDT');
-              },
-            ),
-            ListTile(
-              title: Text('Ajout', style: Theme.of(context).textTheme.headline5,),
-              onTap: () {
-                Navigator.pushNamed(context, '/ajout');
-              },
-            ),
-            doleances.gestion()
-                ? ListTile(
-                    title: Text('Configuration', style: Theme.of(context).textTheme.headline5,),
-                    onTap: () {
-                      Navigator.pushNamed(context, '/configuration');
-                    },
-                  )
-                : Padding(padding: EdgeInsets.only(bottom: 0)),
-            ListTile(
-              title: Text('Connexion / Déconnexion', style: Theme.of(context).textTheme.headline5,),
-              onTap: () {
-                Navigator.pushNamed(context, '/login');
-              },
-            ),
-            Divider(),
-            ListTile(
-              title: Text('A propos', style: Theme.of(context).textTheme.headline5,),
-              onTap: () {
-                Navigator.pushNamed(context, '/apropos');
-              },
-            ),
-          ],
-        ),
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -163,23 +116,26 @@ $comment''');
               ),
             ],
           ),
-          ElevatedButton(
-            child: Text('liste',),
+          Padding(padding: EdgeInsets.only(bottom: 40)),
+              // decoration: const InputDecoration(border: OutlineInputBorder()),
+
+              ElevatedButton(
+            child: Text('Liste',),
             onPressed: () {
-              Navigator.pushNamed(context, '/listeDT');
+              Navigator.pushReplacementNamed(context, '/listeDT');
             },
           ),
           ElevatedButton(
             child: Text('Déconnexion'),
             onPressed: () {
-              Navigator.pushNamed(context, '/login');
+              Navigator.pushReplacementNamed(context, '/login');
             },
           ),
           doleances.gestion()
               ? ElevatedButton(
                   child: Text('Configuration',),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/configuration');
+                    Navigator.pushReplacementNamed(context, '/configuration');
                   },
                 )
               : Padding(padding: EdgeInsets.only(bottom: 20)),

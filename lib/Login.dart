@@ -40,6 +40,8 @@ class Login extends StatelessWidget {
                         doleances.signOut();
                       },
                     ),
+                    Padding(padding: EdgeInsets.only(bottom: 40)),
+
                     ElevatedButton(
                         child: Text('Ajout'),
                         onPressed: () {
@@ -58,6 +60,11 @@ class Login extends StatelessWidget {
                                   context, '/configuration');
                             })
                         : Container(),
+                    ElevatedButton(
+                        child: Text(' propos'),
+                        onPressed: () {
+                          Navigator.pushReplacementNamed(context, '/listeDT');
+                        }),
                   ],
                 )
               : Column(
@@ -98,11 +105,7 @@ class Login extends StatelessWidget {
     // Trim trailing spaces
     await doleances.connect(codeToTest : _code.text.trim());
     if (doleances.connected) {
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop(); // Close the drawer and return
-      } else {
-        Navigator.pushReplacementNamed(context, '/ajout');
-      }
+        Navigator.pushReplacementNamed(context, '/apropos');
     } else {
       _showErrorDialog(context, 'Mauvais code', null);
     }

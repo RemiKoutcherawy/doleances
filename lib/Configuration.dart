@@ -175,6 +175,7 @@ class _ConfigurationState extends State<Configuration> {
             style: Theme.of(context).textTheme.headline5,
           ),
           Row(
+            mainAxisAlignment : MainAxisAlignment.center,
             children: [
               ElevatedButton(
                 child: const Text('Ajouter'),
@@ -212,6 +213,7 @@ class _ConfigurationState extends State<Configuration> {
           ),
           Padding(padding: EdgeInsets.only(bottom: 20)),
           Row(
+            mainAxisAlignment : MainAxisAlignment.center,
             children: [
               ElevatedButton(
                 child: const Text('Ajouter'),
@@ -227,6 +229,31 @@ class _ConfigurationState extends State<Configuration> {
                 },
               ),
             ],
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 20)),
+          Center(
+            child: ElevatedButton(
+              child: Text('Liste'),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/ajout');
+              },
+            ),
+          ),
+          Center(
+            child: ElevatedButton(
+              child: Text('Ajout'),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/ajout');
+              },
+            ),
+          ),
+          Center(
+            child: ElevatedButton(
+              child: Text('Déconnexion'),
+              onPressed: () {
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+            ),
           ),
         ]),
       ),
