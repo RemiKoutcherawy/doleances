@@ -50,7 +50,7 @@ Beware Cocoapods deprecated settings !
 
 Beware FlutterFire bugs !
 > GeneratedPluginRegistrant.m:10:9: Module 'cloud_firestore' not found
-If you know how to fix please tell me...
+If you know how to fix please tell me...\
 
 Steps: \
 `% rm -rf ios`\
@@ -61,7 +61,8 @@ Top left, double clic on Runner to open Editor (File Runner.xcodeproj) \
 Runner / Project / Runner / iOS Deployment Target : 14.7 (or 15.0) \
 Runner / Targets / Runner / Signing @ Capabilities : => Set Team  \
 Runner / Targets / Runner / General / Display Name : Doléances \
-Runner / Targets / Runner / General / Bundle identifier : rk.doleances
+Runner / Targets / Runner / General / Bundle identifier : rk.doleances \
+flutter pub run flutter_launcher_icons:main
 
 Top left, right clic on Runner \
 Add files to "Runner..." \

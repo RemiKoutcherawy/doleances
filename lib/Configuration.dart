@@ -235,7 +235,7 @@ class _ConfigurationState extends State<Configuration> {
             child: ElevatedButton(
               child: Text('Liste'),
               onPressed: () {
-                Navigator.pushReplacementNamed(context, '/ajout');
+                Navigator.pushReplacementNamed(context, '/listeDT');
               },
             ),
           ),
@@ -249,7 +249,7 @@ class _ConfigurationState extends State<Configuration> {
           ),
           Center(
             child: ElevatedButton(
-              child: Text('Déconnexion'),
+              child: Text('Connexion'),
               onPressed: () {
                 Navigator.pushReplacementNamed(context, '/login');
               },

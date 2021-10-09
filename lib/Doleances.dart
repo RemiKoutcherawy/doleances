@@ -29,9 +29,9 @@ class Doleances with ChangeNotifier {
       // Use stored code, if any
       if (storedCode != null) {
         code = storedCode;
-        // Should show a spinner not do get another code during check
+        // Should show a spinner
       } else {
-        // No code. No stored code.
+        // No codeToTest. No stored code.
         return;
       }
     } else {
@@ -42,16 +42,14 @@ class Doleances with ChangeNotifier {
       await Firebase.initializeApp();
 
       // Listen to List updates and push them as a notification
-      _subscription = FirebaseFirestore.instance.collection('doleances')
-          .orderBy('timestamp').limitToLast(1)
+      _subscription = FirebaseFirestore.instance
+          .collection('doleances')
+          .orderBy('timestamp')
           .snapshots()
-          .listen((snapshot) {
-        print('connect in listen subscription ${snapshot.docs.length}');
-        // notifyListeners();
-      }, onDone: () {
-        print('connect in listen subscription onDone');
-        notifyListeners();
-      });
+          .listen( (snapshot) {
+          sendNotification();
+        },
+      );
 
       user = FirebaseAuth.instance.currentUser;
       // User is not already connected
@@ -174,7 +172,7 @@ class Doleances with ChangeNotifier {
     } else if (mail.contains('client') || mail.contains('gestion')) {
       int timestamp = DateTime.now().millisecondsSinceEpoch;
       // Add to class field tasks
-      Task task = Task(id: 'toSet', what: what, where: where, comment: comment, priority: 0, timestamp:timestamp);
+      Task task = Task(id: timestamp.toString(), what: what, where: where, comment: comment, priority: 0, timestamp:timestamp);
       tasks.add(task);
       // Get and add task to the remote collection,
       CollectionReference<Map<String, dynamic>> doleances = FirebaseFirestore.instance.collection('doleances');
@@ -221,7 +219,6 @@ class Doleances with ChangeNotifier {
       // Add to class field tasks
       tasks.add(task);
     }
-    print ('fetchDoleances after list build ${tasks.length}');
     tasks.sort((Task a, Task b) => a.timestamp.compareTo(b.timestamp));
 
     message = 'Doléances récupérées';

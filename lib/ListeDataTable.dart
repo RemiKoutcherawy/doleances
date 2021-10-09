@@ -5,20 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:doleances/Doleances.dart';
 import 'package:doleances/Task.dart';
 
-// See https://api.flutter.dev/flutter/material/DataTable-class.html
-// And https://stackoverflow.com/questions/65312609/flutter-datatable-how-set-column-width
-// And https://github.com/flutter/flutter/issues/70510
-// Use https://api.flutter.dev/flutter/rendering/IntrinsicColumnWidth-class.html
-// in the columnWidths property of the Table ?
-// Table(
-//    columnWidths: {
-//      0: FlexColumnWidth(1.0),
-//      1: FlexColumnWidth(1.0),
-//      2: IntrinsicColumnWidth(), // i want this one to take the rest available space
-//    },
-//    ...
-// ),
-
 class ListeDataTable extends StatefulWidget {
   const ListeDataTable({Key? key}) : super(key: key);
 
@@ -142,7 +128,7 @@ class _ListeDataTable extends State<ListeDataTable> {
               ),
               Center(
                 child: ElevatedButton(
-                  child: Text('Déconnexion'),
+                  child: Text('Connexion'),
                   onPressed: () {
                     Navigator.pushReplacementNamed(context, '/login');
                   },

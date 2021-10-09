@@ -126,7 +126,7 @@ $comment''');
             },
           ),
           ElevatedButton(
-            child: Text('Déconnexion'),
+            child: Text('Connexion'),
             onPressed: () {
               Navigator.pushReplacementNamed(context, '/login');
             },

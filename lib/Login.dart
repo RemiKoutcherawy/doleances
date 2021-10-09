@@ -61,9 +61,9 @@ class Login extends StatelessWidget {
                             })
                         : Container(),
                     ElevatedButton(
-                        child: Text(' propos'),
+                        child: Text('À propos'),
                         onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/listeDT');
+                          Navigator.pushReplacementNamed(context, '/apropos');
                         }),
                   ],
                 )
@@ -105,6 +105,7 @@ class Login extends StatelessWidget {
     // Trim trailing spaces
     await doleances.connect(codeToTest : _code.text.trim());
     if (doleances.connected) {
+      // TODO fix Unhandled Exception: Looking up a deactivated widget's ancestor is unsafe
         Navigator.pushReplacementNamed(context, '/apropos');
     } else {
       _showErrorDialog(context, 'Mauvais code', null);
