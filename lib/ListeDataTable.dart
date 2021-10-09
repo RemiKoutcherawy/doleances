@@ -132,6 +132,22 @@ class _ListeDataTable extends State<ListeDataTable> {
               columns: _columns(),
               rows: _rows(),
               ),
+              Center(
+                child: ElevatedButton(
+                  child: Text('Ajout'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/ajout');
+                  },
+                ),
+              ),
+              Center(
+                child: ElevatedButton(
+                  child: Text('Déconnexion'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/login');
+                  },
+                ),
+              ),
             ],
           ),
       ),

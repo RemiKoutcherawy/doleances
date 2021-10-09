@@ -24,10 +24,10 @@ class Login extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: doleances.connected
               ? Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      'Bienvenue',
+                      'Connecté en tant que',
                       style: Theme.of(context).textTheme.headline5,
                     ),
                     Text(
@@ -61,8 +61,12 @@ class Login extends StatelessWidget {
                   ],
                 )
               : Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    Text(
+                      'Bienvenue',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
                     TextFormField(
                       controller: _code,
                       keyboardType: TextInputType.visiblePassword,

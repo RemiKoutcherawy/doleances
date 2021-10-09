@@ -159,7 +159,6 @@ class _AjoutState extends State<Ajout> {
                   _report('''Ajoutée : 
 $_whatValue / $_whereValue 
 $comment''');
-                  Navigator.pushNamed(context, '/listeDT');
                 },
               ),
             ],
@@ -168,6 +167,12 @@ $comment''');
             child: Text('liste',),
             onPressed: () {
               Navigator.pushNamed(context, '/listeDT');
+            },
+          ),
+          ElevatedButton(
+            child: Text('Déconnexion'),
+            onPressed: () {
+              Navigator.pushNamed(context, '/login');
             },
           ),
           doleances.gestion()
