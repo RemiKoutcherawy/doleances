@@ -10,10 +10,8 @@ class Login extends StatelessWidget {
   // Widget
   @override
   Widget build(BuildContext context) {
-    // Provider
-    Doleances doleances = context.watch<Doleances>();
-    // Check stored connection, no code needed => Bug
-    // doleances.connect();
+    // Provider not listening, main.dart is listenting
+    Doleances doleances = Provider.of<Doleances>(context, listen: false);
 
     // Widget
     return Scaffold(

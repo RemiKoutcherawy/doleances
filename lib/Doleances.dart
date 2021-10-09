@@ -5,13 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // See https://firebase.flutter.dev/docs/firestore/usage/
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'package:provider/provider.dart';
 import 'package:doleances/Task.dart';
 
 // Provider
 class Doleances with ChangeNotifier {
   bool connected = false;
-  bool notified = false;
   String message='';
   User? user;
   List<String> whatStringList = ['Rien'];
@@ -43,7 +41,7 @@ class Doleances with ChangeNotifier {
     try {
       await Firebase.initializeApp();
 
-      // Listen to List updates and push then as a notifcation
+      // Listen to List updates and push them as a notification
       _subscription = FirebaseFirestore.instance.collection('doleances')
           .orderBy('timestamp').limitToLast(1)
           .snapshots()
@@ -93,18 +91,14 @@ class Doleances with ChangeNotifier {
         await fetchChoices();
         await fetchDoleances();
 
-        // Break infinite loop when showing connection
-        if (!notified) {
-          notified = true;
-          notifyListeners();
-        }
       }
     } on FirebaseAuthException catch (e) {
       message = 'Erreur ${(e as dynamic).message}';
       notifyListeners();
     }
   }
-   //
+
+  //
   Future<void> sendNotification() async {
     await fetchDoleances();
     notification = 'Liste mise à jour';
@@ -119,7 +113,6 @@ class Doleances with ChangeNotifier {
       connected = false;
       final storage = new FlutterSecureStorage();
       storage.delete(key:'code');
-      notified = false;
       _subscription?.cancel();
     } on FirebaseAuthException catch (e) {
       message = 'Erreur ${(e as dynamic).message}';

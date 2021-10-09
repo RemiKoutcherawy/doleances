@@ -52,8 +52,8 @@ final appTheme = ThemeData(
 
   // For Dialog
   dialogTheme: DialogTheme(  //).copyWith(
-    titleTextStyle: TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.bold, ),
-    contentTextStyle: TextStyle(fontSize: 20, color: Colors.black,),
+    titleTextStyle: TextStyle(fontSize: 22, color: Colors.black, ),
+    contentTextStyle: TextStyle(fontSize: 20, color: Colors.black, ),
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(12)),
     ),
