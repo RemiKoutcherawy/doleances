@@ -19,8 +19,6 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Provider
-    Doleances doleances = context.watch<Doleances>();
-
     return MaterialApp(
       title: 'Doléances',
       theme: appTheme,
@@ -32,7 +30,7 @@ class App extends StatelessWidget {
         '/configuration': (context) => Configuration(),
         '/apropos': (context) => APropos(),
       },
-      home: doleances.connected ? Ajout() : Login(),
+      home: Login(),
       // Ajout(), Login(), Liste(), Configuration(),
       debugShowCheckedModeBanner: false,
     );

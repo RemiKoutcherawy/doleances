@@ -10,13 +10,17 @@ class Login extends StatelessWidget {
   // Widget
   @override
   Widget build(BuildContext context) {
-    // Provider not listening, main.dart is listenting
-    Doleances doleances = Provider.of<Doleances>(context, listen: false);
+    // Login.dart is listening to Doleances
+    Doleances doleances = Provider.of<Doleances>(context, listen: true);
+    if (!doleances.connected){
+      // Look for stored code to connect automatically
+      doleances.connect();
+    }
 
     // Widget
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doléance connexion',),),
+        title: Text('Doléances connexion',),),
       body: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(20),
@@ -41,7 +45,6 @@ class Login extends StatelessWidget {
                       },
                     ),
                     Padding(padding: EdgeInsets.only(bottom: 40)),
-
                     ElevatedButton(
                         child: Text('Ajout'),
                         onPressed: () {
@@ -102,12 +105,33 @@ class Login extends StatelessWidget {
 
   // Connect in a Future to await Firebase
   Future<void> _connect(Doleances doleances, BuildContext context) async {
-    // Trim trailing spaces
+    // Show waiting progress indicator
+    BuildContext? dialogContext;
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        dialogContext = context;
+        return Dialog(
+          child: new Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 12),
+              const CircularProgressIndicator(),
+              const Text("Connexion"),
+            ],
+          ),
+        );
+      },
+    );
+
+    // Trim trailing spaces from code
     await doleances.connect(codeToTest : _code.text.trim());
-    if (doleances.connected) {
-      // TODO fix Unhandled Exception: Looking up a deactivated widget's ancestor is unsafe
-        Navigator.pushReplacementNamed(context, '/apropos');
-    } else {
+
+    // Close waiting progress indicator
+    Navigator.pop(dialogContext!);
+
+    if (!doleances.connected) {
       _showErrorDialog(context, 'Mauvais code', null);
     }
   }

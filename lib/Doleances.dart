@@ -29,7 +29,6 @@ class Doleances with ChangeNotifier {
       // Use stored code, if any
       if (storedCode != null) {
         code = storedCode;
-        // Should show a spinner
       } else {
         // No codeToTest. No stored code.
         return;
@@ -37,20 +36,10 @@ class Doleances with ChangeNotifier {
     } else {
       code = codeToTest;
     }
+
     // We have a code to test
     try {
       await Firebase.initializeApp();
-
-      // Listen to List updates and push them as a notification
-      _subscription = FirebaseFirestore.instance
-          .collection('doleances')
-          .orderBy('timestamp')
-          .snapshots()
-          .listen( (snapshot) {
-          sendNotification();
-        },
-      );
-
       user = FirebaseAuth.instance.currentUser;
       // User is not already connected
       if (FirebaseAuth.instance.currentUser == null) {
@@ -70,33 +59,47 @@ class Doleances with ChangeNotifier {
               email: 'gestion@doléances.fr', password: code);
         }
         user = FirebaseAuth.instance.currentUser;
-        message = 'Connecté : ${user!.email}.';
-        connected = true;
+        if (user != null){
+          message = 'Connecté : ${user!.email}.';
+          connected = true;
 
-        // Store code locally
-        final storage = new FlutterSecureStorage();
-        await storage.write(key:'code', value:code);
-
-        // Fetch items for Dropdown and liste
-        await fetchChoices();
-        await fetchDoleances();
-
-        notifyListeners();
+          // Store code locally
+          final storage = new FlutterSecureStorage();
+          await storage.write(key:'code', value:code);
+        } else {
+          message = 'Erreur $user}';
+          print('currentUser ............$user');
+          notifyListeners();
+          return;
+        }
       } else {
         connected = true;
-
-        // Fetch items for Dropdown and liste
-        await fetchChoices();
-        await fetchDoleances();
-
       }
+
+      // Fetch items for Dropdown and liste
+      await fetchChoices();
+      await fetchDoleances();
+
+      // Listen to List updates and push them as a notification
+      _subscription = FirebaseFirestore.instance
+          .collection('doleances')
+          .orderBy('timestamp')
+          .snapshots()
+          .listen((snapshot) {
+            sendNotification();
+          },
+      );
     } on FirebaseAuthException catch (e) {
       message = 'Erreur ${(e as dynamic).message}';
-      notifyListeners();
+      print('FirebaseAuthException $message');
+          notifyListeners();
+      return;
     }
+    //  In all cases
+    notifyListeners();
   }
 
-  //
+  // This will show a Snackbar in Liste.dart
   Future<void> sendNotification() async {
     await fetchDoleances();
     notification = 'Liste mise à jour';

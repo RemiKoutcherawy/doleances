@@ -54,11 +54,11 @@ If you know how to fix please tell me...\
 
 Steps: \
 `% rm -rf ios`\
-`% flutter create .`\
-`% cp private/GoogleService-Info.plist ios/Runner` \
+`% flutter create -i swift .`\
+`% cp private/GoogleService-Info.plist ios/Runner/Runner` \
 `% open ios/Runner.xcworkspace` \
 Top left, double clic on Runner to open Editor (File Runner.xcodeproj) \
-Runner / Project / Runner / iOS Deployment Target : 14.7 (or 15.0) \
+Runner / Project / Runner / iOS Deployment Target : 14.0 (or 15.0) \
 Runner / Targets / Runner / Signing @ Capabilities : => Set Team  \
 Runner / Targets / Runner / General / Display Name : Doléances \
 Runner / Targets / Runner / General / Bundle identifier : rk.doleances \
@@ -66,7 +66,7 @@ flutter pub run flutter_launcher_icons:main
 
 Top left, right clic on Runner \
 Add files to "Runner..." \
-Select `ios/Runner/GoogleService-Info.plist`
+Select `ios/Runner/Runner/GoogleService-Info.plist`
 
 Do NOT update to recommended settings, unless you can manage the errors it generates.\
 Top middle, clic on Runner > Edit Scheme... \

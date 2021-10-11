@@ -4,7 +4,7 @@ class APropos extends StatelessWidget {
   static const String _message = '''
 Doléances est un suivi de travaux.
 Tout client peut ajouter une doléance, un signalement.
-Tout client peut voir liste partagée.
+Tout client peut voir la liste partagée.
 Seule la gestionnaire peut enregistrer comme prioritaire, terminé, ou supprimer une doléance.
 Dans la liste les doléances sont en blanc, en orange si prioritaire, en vert si traité. 
 RGPD : aucune information personnelle n'est collectée, le code a pour seule finalité de minimiser le spam.
@@ -15,7 +15,7 @@ RGPD : aucune information personnelle n'est collectée, le code a pour seule fin
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doléance à propos',),
+        title: Text('Doléances à propos',),
       ),
       body: Container(
         alignment: Alignment.center,

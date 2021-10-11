@@ -13,9 +13,9 @@ class ListeDataTable extends StatefulWidget {
 }
 
 class _ListeDataTable extends State<ListeDataTable> {
-  // Local cache
-  List<Task> _tasks = [Task()];
-  Doleances? doleances;
+  // Classe instance of Doleances
+  // Will be replaced by doleances = context.watch<Doleances>();
+  Doleances doleances = Doleances();
 
   // Build header
   List<DataColumn> _columns() {
@@ -32,16 +32,16 @@ class _ListeDataTable extends State<ListeDataTable> {
   }
 
   // Build rows
-  List<DataRow> _rows() {
+  List<DataRow> _rows(doleances) {
     return List<DataRow>.generate(
-      _tasks.length,
+      doleances.tasks.length,
       _rowCells,
     );
   }
 
   // Build cells
   DataRow _rowCells(int index) {
-    Task task = _tasks[index];
+    Task task = doleances.tasks[index];
     Color color = Colors.white;
     switch (task.priority){
       case 0 : color = index % 2 == 0 ? Colors.grey[200]! : Colors.white; break;
@@ -77,7 +77,7 @@ class _ListeDataTable extends State<ListeDataTable> {
         color: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => color),
         onSelectChanged: (bool? value) {
           // Let 20s to correct a new task
-          if (!doleances!.gestion()
+          if (!doleances.gestion()
               && (DateTime.now().millisecondsSinceEpoch - task.timestamp > 200000)
           ) {
             _report('Les clients n‘ont pas le droit de modifier la liste');
@@ -92,16 +92,15 @@ class _ListeDataTable extends State<ListeDataTable> {
   Widget build(BuildContext context) {
     // Provider
     doleances = context.watch<Doleances>();
-    _tasks = doleances!.tasks;
-    String? notification = doleances!.notification;
-    if (notification != null) {
+    String? notification = doleances.notification;
+    if (notification != null && mounted) {
       showSnackBar(notification);
-      doleances!.notification = null;
+      doleances.notification = null;
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Doléance liste',),
+        title: Text('Doléances liste',),
       ),
       body: SingleChildScrollView(
         child:
@@ -116,7 +115,7 @@ class _ListeDataTable extends State<ListeDataTable> {
 
               // Content
               columns: _columns(),
-              rows: _rows(),
+              rows: _rows(doleances),
               ),
               Center(
                 child: ElevatedButton(
@@ -146,10 +145,10 @@ class _ListeDataTable extends State<ListeDataTable> {
     if (priority != null && priority != task.priority) {
       task.priority = priority;
       if (priority == -2) {
-        _tasks.remove(task);
+      doleances.tasks.remove(task);
       }
       setState(() {});
-      doleances?.setPriority(task);
+      doleances.setPriority(task);
     }
   }
 
@@ -222,9 +221,11 @@ class _ListeDataTable extends State<ListeDataTable> {
   Future<void> showSnackBar(String msg) async {
     await Future.delayed(Duration(seconds: 1));
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(msg),
-      duration: Duration(seconds: 4),
-      backgroundColor: Colors.red,
+      content: Text(
+        msg, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline6,
+      ),
+      duration: Duration(seconds: 3),
+      backgroundColor: Colors.lightBlueAccent,
     ));
   }
 }
