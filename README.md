@@ -32,11 +32,6 @@ Open `android/app/build.gradle` and add `multiDexEnabled true` in `defaultConfig
 > defaultConfig {  
 > multiDexEnabled true
 
-TODO:
-A splash screen was provided to Flutter, but this is deprecated. 
-See flutter.dev/go/android-splash-migration for migration steps.
-
-
 ##2. Configure iOS
 Get `GoogleService-Info.plist` and put it in `doleance/private` (private/ is in .gitignore)
 
@@ -138,8 +133,19 @@ rules_version = '2';
 See https://firebase.google.com/docs/hosting?authuser=0   
 
 ##6. Next versions - TODO
-- image upload and display for all 
-- notification to send as soon as a modification is recorded see
-  https://firebase.google.com/codelabs/firebase-web#0
+- edit pubspec.yaml => version: 2.0.0
+  edit android/app/build.gradle => flutterVersionCode = 2
+  flutter clean \
+  flutter pub get \
+  Build > Flutter > Build App Bundle
+  Build > Flutter > Build iOS 
+  
+Locate : android/app/release/app-release.aab
+Locate : build/ios/iphoneos/Runner.app.
+
+Publish : https://play.google.com/console
+Publish : https://appstoreconnect.apple.com/apps
+
+- image upload and display
 - internationalization especially error messages see 
   https://flutter.dev/docs/development/accessibility-and-localization/internationalization
