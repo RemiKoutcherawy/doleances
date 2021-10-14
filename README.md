@@ -133,12 +133,13 @@ rules_version = '2';
 See https://firebase.google.com/docs/hosting?authuser=0   
 
 ##6. Next versions - TODO
-- edit pubspec.yaml => version: 2.0.0
-  edit android/app/build.gradle => flutterVersionCode = 2
-  flutter clean \
-  flutter pub get \
-  Build > Flutter > Build App Bundle
-  Build > Flutter > Build iOS 
+
+edit pubspec.yaml => version: 2.0.0 \
+edit android/app/build.gradle => flutterVersionCode = 2 \
+flutter clean \
+flutter pub get \
+Build > Flutter > Build App Bundle \
+Build > Flutter > Build iOS 
   
 Locate : android/app/release/app-release.aab
 Locate : build/ios/iphoneos/Runner.app.
