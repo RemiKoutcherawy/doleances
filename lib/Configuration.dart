@@ -149,9 +149,6 @@ class _ConfigurationState extends State<Configuration> {
     setDropdownsValues(doleances);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Doléances configuration'),
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -229,31 +226,6 @@ class _ConfigurationState extends State<Configuration> {
                 },
               ),
             ],
-          ),
-          Padding(padding: EdgeInsets.only(bottom: 20)),
-          Center(
-            child: ElevatedButton(
-              child: Text('Liste'),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/listeDT');
-              },
-            ),
-          ),
-          Center(
-            child: ElevatedButton(
-              child: Text('Ajout'),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/ajout');
-              },
-            ),
-          ),
-          Center(
-            child: ElevatedButton(
-              child: Text('Connexion'),
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-            ),
           ),
         ]),
       ),

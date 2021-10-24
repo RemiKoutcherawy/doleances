@@ -19,8 +19,6 @@ class Login extends StatelessWidget {
 
     // Widget
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Doléances connexion',),),
       body: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(20),
@@ -44,31 +42,7 @@ class Login extends StatelessWidget {
                         doleances.signOut();
                       },
                     ),
-                    Padding(padding: EdgeInsets.only(bottom: 40)),
-                    ElevatedButton(
-                        child: Text('Ajout'),
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/ajout');
-                        }),
-                    ElevatedButton(
-                        child: Text('Liste'),
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/listeDT');
-                        }),
-                    doleances.gestion()
-                        ? ElevatedButton(
-                            child: Text('Configuration'),
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(
-                                  context, '/configuration');
-                            })
-                        : Container(),
-                    ElevatedButton(
-                        child: Text('À propos'),
-                        onPressed: () {
-                          Navigator.pushReplacementNamed(context, '/apropos');
-                        }),
-                  ],
+                    ],
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -78,28 +52,9 @@ class Login extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline5,
                     ),
                     ElevatedButton(
-                      child: Text('Connexion sans code'),
-                      onPressed: () {
-                          _connect(doleances, context);
-                      },
-                    ),
-                    TextFormField(
-                      controller: _code,
-                      keyboardType: TextInputType.visiblePassword,
-                      decoration: InputDecoration(
-                        hintText: 'Code...',
-                      ),
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                    ElevatedButton(
                       child: Text('Connexion'),
                       onPressed: () {
-                        if (_code.text.isEmpty) {
-                          _showErrorDialog(
-                              context, 'Le code est nécessaire', null);
-                        } else {
                           _connect(doleances, context);
-                        }
                       },
                     ),
                   ],

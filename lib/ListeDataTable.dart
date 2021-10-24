@@ -99,43 +99,21 @@ class _ListeDataTable extends State<ListeDataTable> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Doléances liste',),
-      ),
       body: SingleChildScrollView(
-        child:
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              DataTable(
-              columnSpacing: 0,
-              sortAscending: false,
-              showCheckboxColumn: false,
-              showBottomBorder: true,
-
-              // Content
-              columns: _columns(),
-              rows: _rows(doleances),
-              ),
-              Center(
-                child: ElevatedButton(
-                  child: Text('Ajout'),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/ajout');
-                  },
-                ),
-              ),
-              Center(
-                child: ElevatedButton(
-                  child: Text('Connexion'),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/login');
-                  },
-                ),
-              ),
-            ],
+        scrollDirection: Axis.vertical,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            columnSpacing: 0,
+            sortAscending: false,
+            showCheckboxColumn: false,
+            showBottomBorder: true,
+            // Content
+            columns: _columns(),
+            rows: _rows(doleances),
+            ),
           ),
-      ),
+        ),
     );
   }
 

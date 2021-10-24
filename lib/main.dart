@@ -22,15 +22,54 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Doléances',
       theme: appTheme,
-      initialRoute: '/',
-      routes: {
-        '/listeDT': (context) => ListeDataTable(),
-        '/ajout': (context) => Ajout(),
-        '/login': (context) => Login(),
-        '/configuration': (context) => Configuration(),
-        '/apropos': (context) => APropos(),
-      },
-      home: Login(),
+      // initialRoute: '/',
+      // routes: {
+      //   '/listeDT': (context) => ListeDataTable(),
+      //   '/ajout': (context) => Ajout(),
+      //   '/login': (context) => Login(),
+      //   '/configuration': (context) => Configuration(),
+      //   '/apropos': (context) => APropos(),
+      // },
+      // home: Login(),
+      home: DefaultTabController(
+        length: 5,
+        child: Scaffold(
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(kToolbarHeight * 2),
+            child: SafeArea(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                      color: Colors.black,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                child: TabBar(
+                  tabs: [
+                    Text("Liste",),
+                    Text("Ajout",),
+                    Text("Login",),
+                    Text("Conf.",),
+                    Text("Aide",),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          body: TabBarView(
+            children: <Widget>[
+              ListeDataTable(),
+              Ajout(),
+              Login(),
+              Configuration(),
+              APropos(),
+            ],
+          ),
+        ),
+      ),
+
       // Ajout(), Login(), Liste(), Configuration(),
       debugShowCheckedModeBanner: false,
     );
@@ -39,14 +78,15 @@ class App extends StatelessWidget {
 
 // Theme
 final appTheme = ThemeData(
-  // For AppBar
-  appBarTheme: AppBarTheme(
-      toolbarTextStyle: TextStyle(
-        fontSize: 24,
-      ),
-      titleTextStyle: TextStyle(
-        fontSize: 24,
-      )),
+  // For TabBar
+  tabBarTheme: TabBarTheme(
+    // indicatorSize: TabBarIndicatorSize.tab,
+    labelPadding: EdgeInsets.all(12),
+    labelColor: Colors.black,
+    unselectedLabelColor: Colors.grey,
+    labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    unselectedLabelStyle: TextStyle(fontSize: 18),
+  ),
 
   // For Dialog
   dialogTheme: DialogTheme(  //).copyWith(
@@ -82,11 +122,11 @@ final appTheme = ThemeData(
       color: Colors.black,
       fontWeight: FontWeight.w500,
     ),
-    dividerThickness: 2,
+    dividerThickness: 1,
   ),
   dividerTheme: DividerThemeData(
     color: Colors.black,
-    thickness: 2,
+    thickness: 1,
   ),
 
   // For ElevatedButton

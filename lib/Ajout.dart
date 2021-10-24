@@ -66,9 +66,6 @@ class _AjoutState extends State<Ajout> {
 
     // Widget
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Doléances ajout',),
-      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -116,29 +113,6 @@ $comment''');
               ),
             ],
           ),
-          Padding(padding: EdgeInsets.only(bottom: 40)),
-              // decoration: const InputDecoration(border: OutlineInputBorder()),
-
-              ElevatedButton(
-            child: Text('Liste',),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/listeDT');
-            },
-          ),
-          ElevatedButton(
-            child: Text('Connexion'),
-            onPressed: () {
-              Navigator.pushReplacementNamed(context, '/login');
-            },
-          ),
-          doleances.gestion()
-              ? ElevatedButton(
-                  child: Text('Configuration',),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/configuration');
-                  },
-                )
-              : Padding(padding: EdgeInsets.only(bottom: 20)),
         ]),
       ),
     );

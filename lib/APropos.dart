@@ -14,23 +14,15 @@ RGPD : aucune information personnelle n'est collectée, le code a pour seule fin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Doléances à propos',),
-      ),
       body: Container(
         alignment: Alignment.center,
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView (
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(_message, style: Theme.of(context).textTheme.headline6,),
-                ElevatedButton(
-                  child: Text('D‘accord !',),
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/login');
-                  },
-                )]
+                children: [
+                  Text(_message, style: Theme.of(context).textTheme.headline6,),
+                ]
             )
         ),
       ),
