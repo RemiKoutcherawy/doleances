@@ -77,6 +77,12 @@ class Login extends StatelessWidget {
                       'Bienvenue',
                       style: Theme.of(context).textTheme.headline5,
                     ),
+                    ElevatedButton(
+                      child: Text('Connexion sans code'),
+                      onPressed: () {
+                          _connect(doleances, context);
+                      },
+                    ),
                     TextFormField(
                       controller: _code,
                       keyboardType: TextInputType.visiblePassword,
@@ -126,7 +132,11 @@ class Login extends StatelessWidget {
     );
 
     // Trim trailing spaces from code
-    await doleances.connect(codeToTest : _code.text.trim());
+    String code = _code.text.trim();
+    if (code == ''){
+      code = 'test';
+    }
+    await doleances.connect(codeToTest : code);
 
     // Close waiting progress indicator
     Navigator.pop(dialogContext!);
