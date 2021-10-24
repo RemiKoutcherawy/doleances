@@ -22,17 +22,9 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'Doléances',
       theme: appTheme,
-      // initialRoute: '/',
-      // routes: {
-      //   '/listeDT': (context) => ListeDataTable(),
-      //   '/ajout': (context) => Ajout(),
-      //   '/login': (context) => Login(),
-      //   '/configuration': (context) => Configuration(),
-      //   '/apropos': (context) => APropos(),
-      // },
-      // home: Login(),
       home: DefaultTabController(
         length: 5,
+        initialIndex: 2,
         child: Scaffold(
           appBar: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight * 2),

@@ -5,9 +5,9 @@ class APropos extends StatelessWidget {
 Doléances est un suivi de travaux.
 Tout client peut ajouter une doléance, un signalement.
 Tout client peut voir la liste partagée.
-Seule la gestionnaire peut enregistrer comme prioritaire, terminé, ou supprimer une doléance.
+Seule le ou la gestionnaire peut enregistrer comme prioritaire, terminé, ou supprimer une doléance.
 Dans la liste les doléances sont en blanc, en orange si prioritaire, en vert si traité. 
-RGPD : aucune information personnelle n'est collectée, le code a pour seule finalité de minimiser le spam.
+RGPD : aucune information personnelle n'est collectée, le mail a pour seule finalité d'identifier le gestionnaire.
 ''';
 
   // Widget

@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:doleances/Doleances.dart';
 
 class Login extends StatelessWidget {
-  final TextEditingController _code = TextEditingController();
+  final TextEditingController _mail = TextEditingController();
 
   // Widget
   @override
@@ -13,7 +13,7 @@ class Login extends StatelessWidget {
     // Login.dart is listening to Doleances
     Doleances doleances = Provider.of<Doleances>(context, listen: true);
     if (!doleances.connected){
-      // Look for stored code to connect automatically
+      // Look for stored mail to connect automatically
       doleances.connect();
     }
 
@@ -25,6 +25,7 @@ class Login extends StatelessWidget {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
           child: doleances.connected
+          // Connected
               ? Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -44,6 +45,7 @@ class Login extends StatelessWidget {
                     ),
                     ],
                 )
+          // Not connected
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -52,9 +54,28 @@ class Login extends StatelessWidget {
                       style: Theme.of(context).textTheme.headline5,
                     ),
                     ElevatedButton(
-                      child: Text('Connexion'),
+                      child: Text('Connexion client'),
                       onPressed: () {
-                          _connect(doleances, context);
+                          _connect(doleances, context, 'client@doléances.fr');
+                      },
+                    ),
+                    Text(
+                      'ou, via le mail de gestion',
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    TextFormField(
+                      controller: _mail,
+                      keyboardType: TextInputType.visiblePassword,
+                      decoration: InputDecoration(
+                        hintText: 'Mail...',
+                      ),
+                      style: Theme.of(context).textTheme.headline5,
+                    ),
+                    ElevatedButton(
+                      child: Text('Connexion gestion'),
+                      onPressed: () {
+                        String mail = _mail.text.trim();
+                        _connect(doleances, context, mail);
                       },
                     ),
                   ],
@@ -65,7 +86,7 @@ class Login extends StatelessWidget {
   }
 
   // Connect in a Future to await Firebase
-  Future<void> _connect(Doleances doleances, BuildContext context) async {
+  Future<void> _connect(Doleances doleances, BuildContext context, String mail) async {
     // Show waiting progress indicator
     BuildContext? dialogContext;
     showDialog(
@@ -86,18 +107,13 @@ class Login extends StatelessWidget {
       },
     );
 
-    // Trim trailing spaces from code
-    String code = _code.text.trim();
-    if (code == ''){
-      code = 'test';
-    }
-    await doleances.connect(codeToTest : code);
+    await doleances.connect(mailToTest : mail);
 
     // Close waiting progress indicator
     Navigator.pop(dialogContext!);
 
     if (!doleances.connected) {
-      _showErrorDialog(context, 'Mauvais code', null);
+      _showErrorDialog(context, 'Mail inconnu', null);
     }
   }
 
@@ -108,7 +124,7 @@ class Login extends StatelessWidget {
         return AlertDialog(
           title: Text(title),
           content: Text(
-            (e != null) ? '${(e as dynamic).message}' : 'Entrez le code...',
+            (e != null) ? '${(e as dynamic).message}' : 'Entrez le mail...',
           ),
           actions: <Widget>[
             OutlinedButton(

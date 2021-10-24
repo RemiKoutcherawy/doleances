@@ -19,53 +19,46 @@ class Doleances with ChangeNotifier {
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _subscription;
   String? notification;
 
-  // Connect with code
-  Future<void> connect({String? codeToTest}) async {
-    String code = 'wrongCode';
-    if (codeToTest == null) {
-      // Check stored identity if any
+  // Connect with mail
+  Future<void> connect({String? mailToTest}) async {
+    String? mail = 'client@doléances.fr';
+    if (mailToTest == null) {
+      // Check stored mail if any
       final storage = new FlutterSecureStorage();
-      String? storedCode = await storage.read(key: 'code');
-      // Use stored code, if any
-      if (storedCode != null) {
-        code = storedCode;
+      String? storedMail = await storage.read(key: 'mail');
+      // Use stored mail, if any
+      if (storedMail != null) {
+        mail = storedMail;
       } else {
-        // No codeToTest. No stored code.
+        // No mailToTest. No stored mail.
         return;
       }
     } else {
-      code = codeToTest;
+      mail = mailToTest;
     }
-
-    // We have a code to test
     try {
       await Firebase.initializeApp();
       user = FirebaseAuth.instance.currentUser;
       // User is not already connected
       if (FirebaseAuth.instance.currentUser == null) {
-        // 3 registered profiles, 3 codes, not in clear, this is opensource !
-        // Hash would be overkill just to choose between profiles.
-        if (code.contains('test')) { // Code isn't verified here, all you know is code contains test
+        if (mail.contains('client@doléances.fr')) {
           await FirebaseAuth.instance
               .signInWithEmailAndPassword(
-              email: 'test@doléances.fr', password: code * 2);
-        } else if (code.contains('s')) { // Code isn't verified here, all you know is code contains s
+              email: 'client@doléances.fr', password: 'stvincent');
+        } else {
           await FirebaseAuth.instance
               .signInWithEmailAndPassword(
-              email: 'client@doléances.fr', password: code);
-        } else if (code.contains('St')) {
-          await FirebaseAuth.instance
-              .signInWithEmailAndPassword(
-              email: 'gestion@doléances.fr', password: code);
+              email: mail, password: 'StVincent');
         }
+
         user = FirebaseAuth.instance.currentUser;
         if (user != null){
           message = 'Connecté : ${user!.email}.';
           connected = true;
 
-          // Store code locally
+          // Store mail locally
           final storage = new FlutterSecureStorage();
-          await storage.write(key:'code', value:code);
+          await storage.write(key:'mail', value:mail);
         } else {
           message = 'Erreur $user}';
           print('currentUser ............$user');
@@ -113,7 +106,7 @@ class Doleances with ChangeNotifier {
       message = 'Déconnecté';
       connected = false;
       final storage = new FlutterSecureStorage();
-      storage.delete(key:'code');
+      storage.delete(key:'mail');
       _subscription?.cancel();
     } on FirebaseAuthException catch (e) {
       message = 'Erreur ${(e as dynamic).message}';
