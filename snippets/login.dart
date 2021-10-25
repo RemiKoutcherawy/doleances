@@ -50,7 +50,7 @@ class _LoginState extends State<Login> {
           email: _mail.text, password: _password.text);
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        _message = 'Connecté : ${user!.email}.';
+        _message = 'Connecté : ${user.email}.';
         _connected = true;
       } else {
         _message = 'Déconnecté';

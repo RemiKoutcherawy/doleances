@@ -9,6 +9,5 @@ ios/
 .flutter-plugins-dependencies
 node_modules/
 private/
-web/
 /macos
 

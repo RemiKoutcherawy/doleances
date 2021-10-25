@@ -83,7 +83,7 @@ class _ConfigurationState extends State<Configuration> {
       _report('La liste contient déjà ${controller.text}');
       return;
     } else if (!doleances.gestion()) {
-      _report('Ajout en local. Les clients n‘ont pas le droit de modifier la configuration.');
+      _report('Les clients n‘ont pas le droit de modifier la configuration.');
     } else {
       // Ok add
       list.add(controller.text);
@@ -116,7 +116,7 @@ class _ConfigurationState extends State<Configuration> {
       _report('La liste ne contient pas $value');
       return;
     } else if (!doleances.gestion()) {
-      _report('Retrait en local. Les clients n‘ont pas le droit de modifier la configuration.');
+      _report('Les clients n‘ont pas le droit de modifier la configuration.');
     } else {
       // Ok remove from list
       list.remove(value);

@@ -36,6 +36,7 @@ Open `android/app/build.gradle` and add `multiDexEnabled true` in `defaultConfig
 Get `GoogleService-Info.plist` and put it in `doleance/private` (private/ is in .gitignore)
 
 Beware Cocoapods bugs !
+
 >% pod install  
 >/Library/Ruby/Gems/2.6.0/gems/ethon-0.14.0/lib/ethon/curls/classes.rb:36: [BUG] Illegal instruction at 0x0000000104584000
 
@@ -48,10 +49,10 @@ Beware FlutterFire bugs !
 If you know how to fix please tell me...\
 
 Steps: \
-`% rm -rf ios`\
-`% flutter create -i swift .`\
-`% cp private/GoogleService-Info.plist ios/Runner/Runner` \
-`% open ios/Runner.xcworkspace` \
+`% rm -rf ios `\
+`% flutter create . `\
+`% cp private/GoogleService-Info.plist ios/Runner/ `\
+`% open ios/Runner.xcworkspace `\
 Top left, double clic on Runner to open Editor (File Runner.xcodeproj) \
 Runner / Project / Runner / iOS Deployment Target : 14.0 (or 15.0) \
 Runner / Targets / Runner / Signing @ Capabilities : => Set Team  \
@@ -68,6 +69,28 @@ Top middle, clic on Runner > Edit Scheme... \
 On the left clic on Run / Run and select Build Configuration : Release
 Take your time...
 Xcode build done.  244,8s
+
+Bugs :\
+The current Dart SDK version is 2.13.4. \
+Because doleances depends on image_picker >=0.8.4+2 which requires SDK version >=2.14.0 <3.0.0, version solving failed. \
+=> removed image_picker \
+Because shared_preferences 2.0.8 requires SDK version >=2.14.0 <3.0.0 and no versions of shared_preferences match >2.0.8 <3.0.0, shared_preferences ^2.0.8 is forbidden. \
+=> removed shared_preferences \
+
+Specs satisfying the `Firebase/Firestore (= 8.6.0), Firebase/Firestore (= 8.8.0)` dependency were found, but they required a higher minimum deployment target.
+Error running pod install
+
+💪 Running with sound null safety 💪
+Error: Unsupported operation: Platform._operatingSystem
+[...]
+at get isLinux (http://localhost:50865/dart_sdk.js:53404:26)
+at Function.desc.get [as isLinux] (http://localhost:50865/dart_sdk.js:5530:17)
+at flutter_secure_storage.FlutterSecureStorage.new.[_selectOptions] (http://localhost:50865/packages/flutter_secure_storage/flutter_secure_storage.dart.lib.js:160:23)
+=> removed flutter_secure_storage
+
+Note: /usr/local/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-2.5.4/android/src/main/java/io/flutter/plugins/firebase/firestore/streamhandler/TransactionStreamHandler.java uses unchecked or unsafe operations.
+
+Note: /usr/local/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage-4.2.1/android/src/main/java/com/it_nomads/fluttersecurestorage/FlutterSecureStoragePlugin.java uses or overrides a deprecated API.
 
 ##3. Configure Firebase
 ###3.1 Create Firebase base [https://console.firebase.google.com/?hl=fr](https://console.firebase.google.com/?hl=fr)  puis :
@@ -107,10 +130,10 @@ rules_version = '2';
 }
 ```
 
-##4. Configure Firebase for Web - TODO
-###4.1 Corriger web/index.html  
-- Remplacer `href="/"` par `href="/web/"`  
-- Ajouter la config Firebase récupérée sur https://console.firebase.google.com/?hl=fr
+##4. Configure Firebase for Web
+###4.1 Edit web/index.html  
+- Replace `href="/"` by `href="/web/"`  
+- Add Firebase config retrieved from https://console.firebase.google.com/?hl=fr
 ```javascript
 <body>
 //...

@@ -60,7 +60,7 @@ class Login extends StatelessWidget {
                       },
                     ),
                     Text(
-                      'ou, via le mail de gestion',
+                      'ou, via le mail de gestion, que vous pouvez choisir en recompilant l‘application',
                       style: Theme.of(context).textTheme.headline5,
                     ),
                     TextFormField(
