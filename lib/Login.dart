@@ -53,14 +53,16 @@ class Login extends StatelessWidget {
                       'Bienvenue',
                       style: Theme.of(context).textTheme.headline5,
                     ),
+                    Padding(padding: EdgeInsets.only(bottom: 20)),
                     ElevatedButton(
                       child: Text('Connexion client'),
                       onPressed: () {
                           _connect(doleances, context, 'client@doléances.fr');
                       },
                     ),
+                    Padding(padding: EdgeInsets.only(bottom: 20)),
                     Text(
-                      'ou, via le mail de gestion, que vous pouvez choisir en recompilant l‘application',
+                      'ou, via le mail de gestion, que vous pouvez définir en recompilant l‘application',
                       style: Theme.of(context).textTheme.headline5,
                     ),
                     TextFormField(
@@ -71,11 +73,17 @@ class Login extends StatelessWidget {
                       ),
                       style: Theme.of(context).textTheme.headline5,
                     ),
+                    Padding(padding: EdgeInsets.only(bottom: 20)),
                     ElevatedButton(
                       child: Text('Connexion gestion'),
                       onPressed: () {
                         String mail = _mail.text.trim();
-                        _connect(doleances, context, mail);
+                        if (mail == '') {
+                          _showErrorDialog(context, 'Mail inconnu', null);
+                          return;
+                        } else {
+                          _connect(doleances, context, mail);
+                        }
                       },
                     ),
                   ],

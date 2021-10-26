@@ -76,7 +76,7 @@ final appTheme = ThemeData(
     labelPadding: EdgeInsets.all(12),
     labelColor: Colors.black,
     unselectedLabelColor: Colors.grey,
-    labelStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    labelStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
     unselectedLabelStyle: TextStyle(fontSize: 18),
   ),
 

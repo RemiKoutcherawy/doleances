@@ -73,9 +73,9 @@ Xcode build done.  244,8s
 Bugs :\
 The current Dart SDK version is 2.13.4. \
 Because doleances depends on image_picker >=0.8.4+2 which requires SDK version >=2.14.0 <3.0.0, version solving failed. \
-=> removed image_picker \
+=> remove image_picker \
 Because shared_preferences 2.0.8 requires SDK version >=2.14.0 <3.0.0 and no versions of shared_preferences match >2.0.8 <3.0.0, shared_preferences ^2.0.8 is forbidden. \
-=> removed shared_preferences \
+=> remove shared_preferences \
 
 Specs satisfying the `Firebase/Firestore (= 8.6.0), Firebase/Firestore (= 8.8.0)` dependency were found, but they required a higher minimum deployment target.
 Error running pod install
@@ -86,11 +86,29 @@ Error: Unsupported operation: Platform._operatingSystem
 at get isLinux (http://localhost:50865/dart_sdk.js:53404:26)
 at Function.desc.get [as isLinux] (http://localhost:50865/dart_sdk.js:5530:17)
 at flutter_secure_storage.FlutterSecureStorage.new.[_selectOptions] (http://localhost:50865/packages/flutter_secure_storage/flutter_secure_storage.dart.lib.js:160:23)
-=> removed flutter_secure_storage
+=> remove flutter_secure_storage
 
-Note: /usr/local/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-2.5.4/android/src/main/java/io/flutter/plugins/firebase/firestore/streamhandler/TransactionStreamHandler.java uses unchecked or unsafe operations.
+From https://stackoverflow.com/questions/68434062/flutter-ios-module-cloud-firestore-not-found-in-generatedpluginregistrant/68476434#68476434
+1/ Delete the Pods directory, the /ios/podfile.lock, and the ios/Flutter/Flutter.podspec
+% rm ./ios
+2/ Run pod deintegrate
+% cd ios
+% pod deintegrate
+Deintegrating `Runner.xcodeproj`
+Removing `Pods` directory.
+Project has been deintegrated. No traces of CocoaPods left in project.
+% cd ..
+3/ Delete all of the contents inside your DerivedData folder.. you can run rm -rf ~/Library/Developer/Xcode/DerivedData/*
+% rm -rf ~/Library/Developer/Xcode/DerivedData/*
+4/ Run flutter clean
+% flutter clean
+5/ Run flutter pub get
+% flutter pub get
+6/ Run flutter build ios. Note thas this will also run the pod install command.
+% flutter build ios
+7/ Close your editor, and open your Runner.xcworkspace on XCode and run your XCode. Clean your build folder. If there's an option to update your project settings, accept it.
+% open ios/Runner.xcworkspace
 
-Note: /usr/local/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_secure_storage-4.2.1/android/src/main/java/com/it_nomads/fluttersecurestorage/FlutterSecureStoragePlugin.java uses or overrides a deprecated API.
 
 ##3. Configure Firebase
 ###3.1 Create Firebase base [https://console.firebase.google.com/?hl=fr](https://console.firebase.google.com/?hl=fr)  puis :
@@ -132,7 +150,6 @@ rules_version = '2';
 
 ##4. Configure Firebase for Web
 ###4.1 Edit web/index.html  
-- Replace `href="/"` by `href="/web/"`  
 - Add Firebase config retrieved from https://console.firebase.google.com/?hl=fr
 ```javascript
 <body>
@@ -171,5 +188,5 @@ Publish : https://play.google.com/console
 Publish : https://appstoreconnect.apple.com/apps
 
 - image upload and display
-- internationalization especially error messages see 
+- internationalization for error messages see 
   https://flutter.dev/docs/development/accessibility-and-localization/internationalization

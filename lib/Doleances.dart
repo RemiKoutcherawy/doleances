@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // See https://firebase.flutter.dev/docs/firestore/usage/
+// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:doleances/Task.dart';
 
 // Provider
@@ -21,6 +22,20 @@ class Doleances with ChangeNotifier {
   // Connect with mail
   Future<void> connect({String? mailToTest}) async {
     String? mail = 'client@doléances.fr';
+    if (mailToTest == null) {
+      // // Check stored mail if any
+      // final storage = new FlutterSecureStorage();
+      // String? storedMail = await storage.read(key: 'mail');
+      // // Use stored mail, if any
+      // if (storedMail != null) {
+      //   mail = storedMail;
+      // } else {
+      //   // No mailToTest. No stored mail.
+        return;
+      // }
+    } else {
+      mail = mailToTest;
+    }
     try {
       await Firebase.initializeApp();
       user = FirebaseAuth.instance.currentUser;
@@ -40,6 +55,10 @@ class Doleances with ChangeNotifier {
         if (user != null){
           message = 'Connecté : ${user!.email}.';
           connected = true;
+
+          // Store mail locally
+          // final storage = new FlutterSecureStorage();
+          // await storage.write(key:'mail', value:mail);
         } else {
           message = 'Erreur $user}';
           print('currentUser ............$user');
@@ -86,6 +105,8 @@ class Doleances with ChangeNotifier {
       await FirebaseAuth.instance.signOut();
       message = 'Déconnecté';
       connected = false;
+      // final storage = new FlutterSecureStorage();
+      // storage.delete(key:'mail');
       _subscription?.cancel();
     } on FirebaseAuthException catch (e) {
       message = 'Erreur ${(e as dynamic).message}';

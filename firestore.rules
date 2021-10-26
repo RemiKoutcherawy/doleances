@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  match /doleances/{entry} {
+      allow read: if true;
+      allow write: if (request.auth.uid == 'iQR5zG3KR2NnNTwjp9KFgaoShTF2'
+      || request.auth.uid == 'U4W9t7rYlnbLso1fZvdxUe2qQol2');
+    }
+    match /configuration/{entry} {
+      allow read: if true;
+      allow write: if (request.auth != null
+      && request.auth.uid == 'U4W9t7rYlnbLso1fZvdxUe2qQol2');
+    }
+    match /fcmTokens/{token} {
+      allow read: if false;
+      allow write;
+    }
+  }
+}

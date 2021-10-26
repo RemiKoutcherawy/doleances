@@ -98,6 +98,7 @@ class _AjoutState extends State<Ajout> {
             keyboardType: TextInputType.multiline,
             controller: _controller,
           ),
+          Padding(padding: EdgeInsets.only(bottom: 20)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

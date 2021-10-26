@@ -171,6 +171,7 @@ class _ConfigurationState extends State<Configuration> {
             controller: _controllerWhat,
             style: Theme.of(context).textTheme.headline5,
           ),
+          Padding(padding: EdgeInsets.only(bottom: 20)),
           Row(
             mainAxisAlignment : MainAxisAlignment.center,
             children: [
