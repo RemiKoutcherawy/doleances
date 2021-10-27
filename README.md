@@ -7,7 +7,7 @@ Première version réalisée avec Dart, Flutter, Firebase.\
 *This project use Dart, Flutter, Firestore, FlutterFire.*
 
 Google Play : En cours d'examen https://play.google.com/store/apps/details?id=rk.doleances \
-Apple Store : Doléances iOS 1.0 En attente de vérification
+Apple Store : Doléances iOS 6.0 En attente de vérification
 
 # For developers
 
@@ -18,40 +18,87 @@ Apple Store : Doléances iOS 1.0 En attente de vérification
     open -a /Applications/Android\ Studio.app .
     open ios/Runner.xcworkspace
 
-Used:\
-https://firebase.flutter.dev/docs/installation/android \
-https://firebase.flutter.dev/docs/installation/ios/
-
 This page is not a tutorial, just notes.
 
 ##1. Configure Android
-On first launch Android Studio returns an error:
+See https://firebase.flutter.dev/docs/installation/android \
+On first launch Android Studio returns errors:
 > Cannot fit requested classes in a single dex file (# methods: 94212 > 65536)
+> Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 18 declared in library [:flutter_secure_storage] /Users/remi/git/doleances/build/flutter_secure_storage/intermediates/library_manifest/debug/AndroidManifest.xml as the library might be using APIs not available in 16
+> Warning: Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.android.com/repository/android/common/01
+> E/flutter (11479): [ERROR:flutter/lib/ui/ui_dart_state.cc(209)] Unhandled Exception: [core/not-initialized] Firebase has not been correctly initialized. Have you added the "google-services.json" file to the project?
 
 Open `android/app/build.gradle` and add `multiDexEnabled true` in `defaultConfig` :  
 > defaultConfig {  
-> multiDexEnabled true
+> multiDexEnabled true    // Added
+> applicationId "rk.doleances"
+> minSdkVersion 18        // Changed from 16 to 18
+> targetSdkVersion 30
+> versionCode flutterVersionCode.toInteger()
+> versionName flutterVersionName
+>}
+
+Firebase has not been correctly initialized.
+> % cp google-services.json android/app
+
+Edit android/build.gradle
+> buildscript {
+>   dependencies {
+>     // ... other dependencies
+>     classpath 'com.google.gms:google-services:4.3.8'    // Added
+>   }
+> }
+
+Edit android/app/build.gradle
+> apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+> apply plugin: 'com.google.gms.google-services'          // Added
+
+Build > Flutter > Build App Bundle \
+✓ Built build/app/outputs/bundle/release/app-release.aab (18.5MB). \
+If you try to upload it you will get :\
+Votre Android App Bundle a été signé avec la mauvaise clé. Assurez-vous que votre app bundle est signé avec la bonne clé et réessayez. L'app bundle que vous avez importé devrait normalement être signé avec le certificat associé à l'empreinte
+
+> % open -a /Applications/Android\ Studio.app android 
+
+Upload to https://play.google.com/console/  > Créer une release de production
+Select doleances/android/app/release/app-release.aab
+> Le code de version 1 a déjà été utilisé. Choisissez-en un autre.
+
+=> add to doleances/android/local.properties (and not doleances/local.properties)
+flutter.versionCode=6
+flutter.versionName=6.0.0
+Build / Rebuild Project
+Build / Generate Signed Bundle  / APK...
+
+Note 
+- Android Emulator Landscape mode \
+  Emable auto-rotate inside Emulator (auto-rotate off by default)
+- Application launcher icon \
+  flutter pub run flutter_launcher_icons:main
+
+Publish : https://play.google.com/console \
 
 ##2. Configure iOS
-Get `GoogleService-Info.plist` and put it in `doleance/private` (private/ is in .gitignore)
+See https://firebase.flutter.dev/docs/installation/ios \
+Get `GoogleService-Info.plist` from Firebase console https://console.firebase.google.com/
 
-Beware Cocoapods bugs !
+Cocoapods bugs !
 
 >% pod install  
 >/Library/Ruby/Gems/2.6.0/gems/ethon-0.14.0/lib/ethon/curls/classes.rb:36: [BUG] Illegal instruction at 0x0000000104584000
 
-Beware Cocoapods deprecated settings !
+Cocoapods deprecated settings !
 
 > [!] Automatically assigning platform `iOS` with version `9.0` on target `Runner` because no platform was specified. Please specify a platform for this target
 
-Beware FlutterFire bugs !
+FlutterFire bugs !
 > GeneratedPluginRegistrant.m:10:9: Module 'cloud_firestore' not found
 If you know how to fix please tell me...\
 
 Steps: \
 `% rm -rf ios `\
 `% flutter create . `\
-`% cp private/GoogleService-Info.plist ios/Runner/ `\
+`% cp GoogleService-Info.plist ios/Runner/ `\
 `% open ios/Runner.xcworkspace `\
 Top left, double clic on Runner to open Editor (File Runner.xcodeproj) \
 Runner / Project / Runner / iOS Deployment Target : 14.0 (or 15.0) \
@@ -64,19 +111,17 @@ Top left, right clic on Runner \
 Add files to "Runner..." \
 Select `ios/Runner/Runner/GoogleService-Info.plist`
 
-Do NOT update to recommended settings, unless you can manage the errors it generates.\
 Top middle, clic on Runner > Edit Scheme... \
 On the left clic on Run / Run and select Build Configuration : Release
 Take your time...
 Xcode build done.  244,8s
 
-Bugs :\
+Bugs : \
 The current Dart SDK version is 2.13.4. \
 Because doleances depends on image_picker >=0.8.4+2 which requires SDK version >=2.14.0 <3.0.0, version solving failed. \
 => remove image_picker \
 Because shared_preferences 2.0.8 requires SDK version >=2.14.0 <3.0.0 and no versions of shared_preferences match >2.0.8 <3.0.0, shared_preferences ^2.0.8 is forbidden. \
 => remove shared_preferences \
-
 Specs satisfying the `Firebase/Firestore (= 8.6.0), Firebase/Firestore (= 8.8.0)` dependency were found, but they required a higher minimum deployment target.
 Error running pod install
 
@@ -108,6 +153,10 @@ Project has been deintegrated. No traces of CocoaPods left in project.
 % flutter build ios
 7/ Close your editor, and open your Runner.xcworkspace on XCode and run your XCode. Clean your build folder. If there's an option to update your project settings, accept it.
 % open ios/Runner.xcworkspace
+
+Publish : https://appstoreconnect.apple.com/apps \
+Les captures d’écran doivent respecter ces dimensions : 
+1242x2688 2688x1242 1284x2778 2778x1284
 
 
 ##3. Configure Firebase
@@ -175,16 +224,16 @@ See https://firebase.google.com/docs/hosting?authuser=0
 ##6. Next versions - TODO
 
 edit pubspec.yaml => version: 2.0.0 \
-edit android/app/build.gradle => flutterVersionCode = 2 \
+edit android/app/build.gradle => flutterVersionCode = 3 \
 flutter clean \
 flutter pub get \
 Build > Flutter > Build App Bundle \
 Build > Flutter > Build iOS 
   
-Locate : android/app/release/app-release.aab
+Locate : android/app/release/app-release.aab \
 Locate : build/ios/iphoneos/Runner.app.
 
-Publish : https://play.google.com/console
+Publish : https://play.google.com/console \
 Publish : https://appstoreconnect.apple.com/apps
 
 - image upload and display

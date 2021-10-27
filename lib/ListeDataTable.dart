@@ -51,32 +51,17 @@ class _ListeDataTable extends State<ListeDataTable> {
     }
     return DataRow(
         cells: <DataCell>[
-          DataCell(Text(task.what,
-              overflow: TextOverflow.visible,
-              softWrap: true)),
-          DataCell(VerticalDivider()),
-          DataCell(Text(
-            task.where,
-            overflow: TextOverflow.visible,
-            softWrap: true,
-          )),
-          DataCell(VerticalDivider()),
-          DataCell(Text(
-            task.comment,
-            // overflow: TextOverflow.visible,
-            softWrap: true,
-          )),
-          DataCell(VerticalDivider()),
-          DataCell(Text(
-            task.priority.toString(),
-            overflow: TextOverflow.visible,
-            softWrap: true,
-          )),
-          // DataCell(VerticalDivider()),
+          DataCell(Text(task.what,),),
+          DataCell(VerticalDivider(),),
+          DataCell(Text(task.where),),
+          DataCell(VerticalDivider(),),
+          DataCell(Text(task.comment,),),
+          DataCell(VerticalDivider(),),
+          DataCell(Text(task.priority.toString(),),),
         ],
         color: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) => color),
         onSelectChanged: (bool? value) {
-          // Let 20s to correct a new task
+          // Let 200s to correct a new task
           if (!doleances.gestion()
               && (DateTime.now().millisecondsSinceEpoch - task.timestamp > 200000)
           ) {
@@ -99,21 +84,28 @@ class _ListeDataTable extends State<ListeDataTable> {
     }
 
     return Scaffold(
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: DataTable(
-            columnSpacing: 0,
-            sortAscending: false,
-            showCheckboxColumn: false,
-            showBottomBorder: true,
-            // Content
-            columns: _columns(),
-            rows: _rows(doleances),
-            ),
+      body: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                  child: buildDataTable(),
+                ),
+              ),
           ),
         ),
+    );
+  }
+  DataTable buildDataTable(){
+    return DataTable(
+      columnSpacing: 0,
+      sortAscending: false,
+      showCheckboxColumn: false,
+      showBottomBorder: true,
+      // Content
+      columns: _columns(),
+      rows: _rows(doleances),
     );
   }
 
@@ -137,9 +129,7 @@ class _ListeDataTable extends State<ListeDataTable> {
         barrierDismissible: true,
         builder: (BuildContext context) {
           return SimpleDialog(
-            title: Text(
-              '${task.what} / ${task.where}',
-            ),
+            title: Text('${task.what} / ${task.where}',),
             children: <Widget>[
               Column(
                 children: [
