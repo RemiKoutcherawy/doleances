@@ -6,8 +6,8 @@ Cette application gère des doléances dans une liste partagée.\
 Première version réalisée avec Dart, Flutter, Firebase.\
 *This project use Dart, Flutter, Firestore, FlutterFire.*
 
-Google Play : En cours d'examen https://play.google.com/store/apps/details?id=rk.doleances \
-Apple Store : Doléances iOS 6.0 En attente de vérification
+Google Play : https://play.google.com/store/apps/details?id=rk.doleances \
+Apple Store : https://apps.apple.com/fr/app/dol%C3%A9ances/id1587598484 \
 
 # For developers
 
@@ -218,8 +218,47 @@ rules_version = '2';
 </body>
 ```
 
-##5. Configure hosting - TODO
-See https://firebase.google.com/docs/hosting?authuser=0   
+##5. Configure hosting
+See https://firebase.google.com/docs/hosting
+and https://flutter.dev/docs/deployment/web#building-the-app-for-release   
+
+    flutter build web
+    firebase init
+    firebase emulators:start
+
+% firebase init // Not well documented => accept almost defaults \
+? Which Firebase features do you want to set up for this directory? \
+◉ Firestore: Configure security rules and indexes files for Firestore\
+◉ Hosting: Configure files for Firebase Hosting and (optionally) set up GitHub Action deploys\
+◉ Storage: Configure a security rules file for Cloud Storage\
+◉ Emulators: Set up local emulators for Firebase products\
+? What file should be used for Firestore indexes? firestore.indexes.json \
+? File firestore.indexes.json already exists. Do you want to overwrite it with the Firestore Indexes from the Firebase Console? Yes \
+? What file should be used for Firestore indexes? (firestore.indexes.json) i  firestore: Change detected, updating rules... \
+? File firestore.indexes.json already exists. Do you want to overwrite it with the Firestore Indexes from the Firebase Console? Yes  \
+? What do you want to use as your public directory? web  \
+? Configure as a single-page app (rewrite all urls to /index.html)? Yes \
+? Set up automatic builds and deploys with GitHub? No \
+? File web/index.html already exists. Overwrite? No \
+✔  Wrote web/index.html \
+? What file should be used for Storage Rules? storage.rules \
+? File storage.rules already exists. Overwrite? Yes \
+✔  Wrote storage.rules \
+? Which Firebase emulators do you want to set up? \ 
+◉ Authentication Emulator \
+◉ Firestore Emulator \
+◉ Storage Emulator \
+? Would you like to download the emulators now? (y/N) N \
+✔  Firebase initialization complete!
+
+    firebase emulators:start
+
+Open http://localhost:5000 => Firebase Hosting Setup Complete
+
+Stuck here : how to use emulator ?
+
+    firebase deploy --only hosting
+
 
 ##6. Next versions - TODO
 
