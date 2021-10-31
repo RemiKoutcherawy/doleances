@@ -1,13 +1,14 @@
 .dart_tool/
 .idea/
+.firebase/
 android/
 build/
-gen/
 ios/
 .gradle/
 .flutter-plugins
 .flutter-plugins-dependencies
-node_modules/
+local.properties
 private/
-/macos
+data/
+
 

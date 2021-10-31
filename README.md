@@ -9,7 +9,7 @@ Première version réalisée avec Dart, Flutter, Firebase.\
 Google Play : https://play.google.com/store/apps/details?id=rk.doleances \
 Apple Store : https://apps.apple.com/fr/app/dol%C3%A9ances/id1587598484 \
 
-# For developers
+# Notes 
 
     git clone --depth 1 https://github.com/RemiKoutcherawy/doleances 
     cd doleances
@@ -24,7 +24,7 @@ This page is not a tutorial, just notes.
 See https://firebase.flutter.dev/docs/installation/android \
 On first launch Android Studio returns errors:
 > Cannot fit requested classes in a single dex file (# methods: 94212 > 65536)
-> Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 18 declared in library [:flutter_secure_storage] /Users/remi/git/doleances/build/flutter_secure_storage/intermediates/library_manifest/debug/AndroidManifest.xml as the library might be using APIs not available in 16
+> Manifest merger failed : uses-sdk:minSdkVersion 16 cannot be smaller than version 18 declared in library
 > Warning: Mapping new ns http://schemas.android.com/repository/android/common/02 to old ns http://schemas.android.com/repository/android/common/01
 > E/flutter (11479): [ERROR:flutter/lib/ui/ui_dart_state.cc(209)] Unhandled Exception: [core/not-initialized] Firebase has not been correctly initialized. Have you added the "google-services.json" file to the project?
 
@@ -55,28 +55,24 @@ Edit android/app/build.gradle
 
 Build > Flutter > Build App Bundle \
 ✓ Built build/app/outputs/bundle/release/app-release.aab (18.5MB). \
-If you try to upload it you will get :\
-Votre Android App Bundle a été signé avec la mauvaise clé. Assurez-vous que votre app bundle est signé avec la bonne clé et réessayez. L'app bundle que vous avez importé devrait normalement être signé avec le certificat associé à l'empreinte
 
 > % open -a /Applications/Android\ Studio.app android 
 
-Upload to https://play.google.com/console/  > Créer une release de production
-Select doleances/android/app/release/app-release.aab
+Upload to https://play.google.com/console/ > Créer une release de production \
+Choose doleances/android/app/release/app-release.aab
 > Le code de version 1 a déjà été utilisé. Choisissez-en un autre.
 
 => add to doleances/android/local.properties (and not doleances/local.properties)
-flutter.versionCode=6
-flutter.versionName=6.0.0
-Build / Rebuild Project
-Build / Generate Signed Bundle  / APK...
+flutter.versionCode=6\
+flutter.versionName=6.0.0\
+Build / Rebuild Project\
+Build / Generate Signed Bundle  / APK...\
 
 Note 
 - Android Emulator Landscape mode \
   Emable auto-rotate inside Emulator (auto-rotate off by default)
 - Application launcher icon \
   flutter pub run flutter_launcher_icons:main
-
-Publish : https://play.google.com/console \
 
 ##2. Configure iOS
 See https://firebase.flutter.dev/docs/installation/ios \
@@ -87,11 +83,13 @@ Cocoapods bugs !
 >% pod install  
 >/Library/Ruby/Gems/2.6.0/gems/ethon-0.14.0/lib/ethon/curls/classes.rb:36: [BUG] Illegal instruction at 0x0000000104584000
 
-Cocoapods deprecated settings !
+Closed : https://github.com/CocoaPods/CocoaPods/issues/10893 
+
+Cocoapods deprecated settings
 
 > [!] Automatically assigning platform `iOS` with version `9.0` on target `Runner` because no platform was specified. Please specify a platform for this target
 
-FlutterFire bugs !
+FlutterFire bugs
 > GeneratedPluginRegistrant.m:10:9: Module 'cloud_firestore' not found
 If you know how to fix please tell me...\
 
@@ -126,50 +124,46 @@ Specs satisfying the `Firebase/Firestore (= 8.6.0), Firebase/Firestore (= 8.8.0)
 Error running pod install
 
 💪 Running with sound null safety 💪
-Error: Unsupported operation: Platform._operatingSystem
-[...]
-at get isLinux (http://localhost:50865/dart_sdk.js:53404:26)
-at Function.desc.get [as isLinux] (http://localhost:50865/dart_sdk.js:5530:17)
-at flutter_secure_storage.FlutterSecureStorage.new.[_selectOptions] (http://localhost:50865/packages/flutter_secure_storage/flutter_secure_storage.dart.lib.js:160:23)
+Error: Unsupported operation: Platform._operatingSystem\
+[...]\
+at get isLinux (http://localhost:50865/dart_sdk.js:53404:26)\
+at Function.desc.get [as isLinux] (http://localhost:50865/dart_sdk.js:5530:17)\
+at flutter_secure_storage.FlutterSecureStorage.new.[_selectOptions] (http://localhost:50865/packages/flutter_secure_storage/flutter_secure_storage.dart.lib.js:160:23)\
 => remove flutter_secure_storage
 
-From https://stackoverflow.com/questions/68434062/flutter-ios-module-cloud-firestore-not-found-in-generatedpluginregistrant/68476434#68476434
-1/ Delete the Pods directory, the /ios/podfile.lock, and the ios/Flutter/Flutter.podspec
-% rm ./ios
-2/ Run pod deintegrate
-% cd ios
-% pod deintegrate
-Deintegrating `Runner.xcodeproj`
-Removing `Pods` directory.
-Project has been deintegrated. No traces of CocoaPods left in project.
-% cd ..
-3/ Delete all of the contents inside your DerivedData folder.. you can run rm -rf ~/Library/Developer/Xcode/DerivedData/*
-% rm -rf ~/Library/Developer/Xcode/DerivedData/*
-4/ Run flutter clean
-% flutter clean
-5/ Run flutter pub get
-% flutter pub get
-6/ Run flutter build ios. Note thas this will also run the pod install command.
-% flutter build ios
-7/ Close your editor, and open your Runner.xcworkspace on XCode and run your XCode. Clean your build folder. If there's an option to update your project settings, accept it.
-% open ios/Runner.xcworkspace
-
-Publish : https://appstoreconnect.apple.com/apps \
-Les captures d’écran doivent respecter ces dimensions : 
-1242x2688 2688x1242 1284x2778 2778x1284
-
+From https://stackoverflow.com/questions/68434062/flutter-ios-module-cloud-firestore-not-found-in-generatedpluginregistrant/68476434#68476434 \
+1/ Delete the Pods directory, the /ios/podfile.lock, and the ios/Flutter/Flutter.podspec \
+% rm ./ios \
+2/ Run pod deintegrate \
+% cd ios \
+% pod deintegrate \
+Deintegrating `Runner.xcodeproj` \
+Removing `Pods` directory. \
+Project has been deintegrated. No traces of CocoaPods left in project. \
+% cd .. \
+3/ Delete all of the contents inside your DerivedData folder.. you can run rm -rf ~/Library/Developer/Xcode/DerivedData/* \
+% rm -rf ~/Library/Developer/Xcode/DerivedData/* \
+4/ Run flutter clean \
+% flutter clean \
+5/ Run flutter pub get \
+% flutter pub get \
+6/ Run flutter build ios. Note thas this will also run the pod install command. \
+% flutter build ios \
+7/ Close your editor, and open your Runner.xcworkspace on XCode and run your XCode. Clean your build folder. If there's an option to update your project settings, accept it. \
+% open ios/Runner.xcworkspace \
 
 ##3. Configure Firebase
-###3.1 Create Firebase base [https://console.firebase.google.com/?hl=fr](https://console.firebase.google.com/?hl=fr)  puis :
+###3.1 Create Firebase base 
+[https://console.firebase.google.com/?hl=fr](https://console.firebase.google.com/?hl=fr)  then :
 - Retrieve `google-services.json` and put it in `android/app/` next to `build.gradle`  
 - Edit `android/build.gradle` to add `classpath 'com.google.gms:google-services:4.3.10'`  
    > dependencies {  
    > classpath 'com.google.gms:google-services:4.3.10' // Added
 - Open `android/app/build.gradle` and add 2 lines :
-  - Add `apply plugin: 'com.google.gms.google-services'`
+- Add `apply plugin: 'com.google.gms.google-services'`
   > apply plugin: 'com.android.application'  
   > apply plugin: 'com.google.gms.google-services' // Added 
-  - Add `implementation platform('com.google.firebase:firebase-bom:28.4.0')`
+- Add `implementation platform('com.google.firebase:firebase-bom:28.4.0')`
   > dependencies {  
   >  implementation platform('com.google.firebase:firebase-bom:28.4.0') // Added
 
@@ -183,21 +177,27 @@ Les captures d’écran doivent respecter ces dimensions :
 - Rules
 ```
 rules_version = '2';
-  service cloud.firestore {
+service cloud.firestore {
   match /databases/{database}/documents {
-    match /doleances/{entry} {
-        allow read: if request.auth.uid != null;
-        allow write: if request.auth.uid != null;
+  match /doleances/{entry} {
+      allow read: if true;
+      allow write: if (request.auth.uid == 'iQR5zG3KR2NnNTwjp9KFgaoShTF2'
+      || request.auth.uid == 'U4W9t7rYlnbLso1fZvdxUe2qQol2');
     }
     match /configuration/{entry} {
-        allow read: if true;
-        allow write: if request.auth.uid != null;
+      allow read: if true;
+      allow write: if (request.auth != null
+      && request.auth.uid == 'U4W9t7rYlnbLso1fZvdxUe2qQol2');
+    }
+    match /fcmTokens/{token} {
+      allow read: if false;
+      allow write;
     }
   }
 }
 ```
 
-##4. Configure Firebase for Web
+##4. Configure Firebase web
 ###4.1 Edit web/index.html  
 - Add Firebase config retrieved from https://console.firebase.google.com/?hl=fr
 ```javascript
@@ -210,7 +210,7 @@ rules_version = '2';
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js";
   const firebaseConfig = {
-      //...
+      //... Here add config
   };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
@@ -219,62 +219,36 @@ rules_version = '2';
 ```
 
 ##5. Configure hosting
-See https://firebase.google.com/docs/hosting
-and https://flutter.dev/docs/deployment/web#building-the-app-for-release   
+Minimal configuration
 
-    flutter build web
-    firebase init
-    firebase emulators:start
+    flutter build web --release
+    firebase init // check with space : hosting 
+    firebase deploy
 
-% firebase init // Not well documented => accept almost defaults \
-? Which Firebase features do you want to set up for this directory? \
-◉ Firestore: Configure security rules and indexes files for Firestore\
-◉ Hosting: Configure files for Firebase Hosting and (optionally) set up GitHub Action deploys\
-◉ Storage: Configure a security rules file for Cloud Storage\
-◉ Emulators: Set up local emulators for Firebase products\
-? What file should be used for Firestore indexes? firestore.indexes.json \
-? File firestore.indexes.json already exists. Do you want to overwrite it with the Firestore Indexes from the Firebase Console? Yes \
-? What file should be used for Firestore indexes? (firestore.indexes.json) i  firestore: Change detected, updating rules... \
-? File firestore.indexes.json already exists. Do you want to overwrite it with the Firestore Indexes from the Firebase Console? Yes  \
-? What do you want to use as your public directory? web  \
-? Configure as a single-page app (rewrite all urls to /index.html)? Yes \
-? Set up automatic builds and deploys with GitHub? No \
-? File web/index.html already exists. Overwrite? No \
-✔  Wrote web/index.html \
-? What file should be used for Storage Rules? storage.rules \
-? File storage.rules already exists. Overwrite? Yes \
-✔  Wrote storage.rules \
-? Which Firebase emulators do you want to set up? \ 
-◉ Authentication Emulator \
-◉ Firestore Emulator \
-◉ Storage Emulator \
-? Would you like to download the emulators now? (y/N) N \
-✔  Firebase initialization complete!
-
-    firebase emulators:start
-
-Open http://localhost:5000 => Firebase Hosting Setup Complete
-
-Stuck here : how to use emulator ?
-
-    firebase deploy --only hosting
-
+% firebase init \
+? Which Firebase features do you want to set up for this directory?  \
+Hosting: Configure files for Firebase Hosting and (optionally) set up GitHub Action deploys  \
+? What do you want to use as your public directory? **build/web**  \
+Configure as a single-page app? **y**  \
+File build/web/index.html already exists. Overwrite? **N**  \
+i  Skipping write of build/web/index.html \
+i  Writing configuration info to firebase.json... \
+i  Writing project information to .firebaserc... \
+% firebase deploy \
+i  deploying firestore, hosting \
+✔  hosting[doleances-3e828]: release complete\
+✔  Deploy complete!\
+Project Console: https://console.firebase.google.com/project/doleances-3e828/overview \
+Hosting URL: https://doleances-3e828.web.app
 
 ##6. Next versions - TODO
-
-edit pubspec.yaml => version: 2.0.0 \
-edit android/app/build.gradle => flutterVersionCode = 3 \
-flutter clean \
-flutter pub get \
-Build > Flutter > Build App Bundle \
-Build > Flutter > Build iOS 
-  
-Locate : android/app/release/app-release.aab \
-Locate : build/ios/iphoneos/Runner.app.
-
+For future version v 7 : \
+edit pubspec.yaml => version: 7.0.0 \
+edit android/app/build.gradle => flutterVersionCode = 7 \
 Publish : https://play.google.com/console \
 Publish : https://appstoreconnect.apple.com/apps
 
+- Login with Apple ID, or Google ID
 - image upload and display
-- internationalization for error messages see 
+- internationalization for error messages see \
   https://flutter.dev/docs/development/accessibility-and-localization/internationalization
